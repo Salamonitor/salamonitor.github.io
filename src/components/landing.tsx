@@ -258,7 +258,7 @@ export default function Landing() {
                   Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.
                 </p>
               </div>
-              <div className="stats" style={{ gridTemplateColumns: "repeat(4,1fr)", marginTop: 30 }}>
+              <div className="stats" style={{ marginTop: 30 }}>
                 <div className="st"><div className="n">412</div><div className="l">Errors in a median backlog</div></div>
                 <div className="st"><div className="n">6</div><div className="l">Pipeline steps, nightly</div></div>
                 <div className="st"><div className="n">~20m</div><div className="l">Per investigation, sandboxed</div></div>
