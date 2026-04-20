@@ -135,6 +135,8 @@ export default function Landing() {
           </section>
 
           <section className="manifesto">
+            <h2 className="ba-lede">You have a backlog of 412 low-priority errors. Nobody is going to touch them.</h2>
+
             <div className="ba-grid">
               <div className="ba-col">
                 <div className="ba-cap">
@@ -146,11 +148,11 @@ export default function Landing() {
                     <span className="dot r" />
                     <span className="dot y" />
                     <span className="dot g" />
-                    <span style={{ marginLeft: 10, fontFamily: "var(--mono)", fontSize: 11 }}>
+                    <span style={{ marginLeft: 10, fontFamily: "var(--mono)", fontSize: "0.6875rem" }}>
                       errors · production · last 24h
                     </span>
                     <span className="live-dot" />
-                    <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--accent)", fontWeight: 700, marginLeft: 4 }}>
+                    <span style={{ fontFamily: "var(--mono)", fontSize: "0.625rem", color: "var(--accent)", fontWeight: 700, marginLeft: 4 }}>
                       LIVE
                     </span>
                   </div>
@@ -211,9 +213,9 @@ export default function Landing() {
                 <div className="obs after">
                   <div className="obs-head">
                     <span className="dot r" /><span className="dot y" /><span className="dot g" />
-                    <span style={{ marginLeft: 10, fontFamily: "var(--mono)", fontSize: 11 }}>errors · production · last 24h</span>
+                    <span style={{ marginLeft: 10, fontFamily: "var(--mono)", fontSize: "0.6875rem" }}>errors · production · last 24h</span>
                     <span className="live-dot ok" />
-                    <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "#2f7a3d", fontWeight: 700, marginLeft: 4 }}>HEALTHY</span>
+                    <span style={{ fontFamily: "var(--mono)", fontSize: "0.625rem", color: "#2f7a3d", fontWeight: 700, marginLeft: 4 }}>HEALTHY</span>
                   </div>
                   <div className="obs-kpis">
                     <div className="kpi"><div className="kpi-n" style={{ color: "#2f7a3d" }}>3</div><div className="kpi-l">new errors</div></div>
@@ -251,19 +253,15 @@ export default function Landing() {
               </div>
             </div>
 
-            <div className="ba-text">
-              <h2>You have a backlog of 412 low-priority errors. Nobody is going to touch them.</h2>
-              <div>
-                <p style={{ fontSize: 20 }}>
-                  Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.
-                </p>
-              </div>
-              <div className="stats" style={{ marginTop: 30 }}>
-                <div className="st"><div className="n">412</div><div className="l">Errors in a median backlog</div></div>
-                <div className="st"><div className="n">6</div><div className="l">Pipeline steps, nightly</div></div>
-                <div className="st"><div className="n">~20m</div><div className="l">Per investigation, sandboxed</div></div>
-                <div className="st"><div className="n">0</div><div className="l">Raw logs retained</div></div>
-              </div>
+            <p className="ba-body">
+              Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.
+            </p>
+
+            <div className="stats ba-stats">
+              <div className="st"><div className="n">412</div><div className="l">Errors in a median backlog</div></div>
+              <div className="st"><div className="n">6</div><div className="l">Pipeline steps, nightly</div></div>
+              <div className="st"><div className="n">~20m</div><div className="l">Per investigation, sandboxed</div></div>
+              <div className="st"><div className="n">0</div><div className="l">Raw logs retained</div></div>
             </div>
           </section>
 
@@ -273,7 +271,7 @@ export default function Landing() {
                 <div className="eyebrow">{h.eyebrow}</div>
                 <h2 style={{ marginBottom: 14 }}>{h.h2}</h2>
                 <p style={{ marginBottom: 18 }}>{h.sub}</p>
-                <ul style={{ padding: 0, margin: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8, fontFamily: "var(--mono)", fontSize: 12, color: "var(--ink)" }}>
+                <ul style={{ padding: 0, margin: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8, fontFamily: "var(--mono)", fontSize: "0.8125rem", color: "var(--ink)" }}>
                   <li>▪ Small, scoped diffs. One recurring error per PR.</li>
                   <li>▪ Context: error signature, 24h occurrence count, affected services, trace link.</li>
                   <li>▪ Tests added. Lint clean before it&#39;s opened.</li>
@@ -349,7 +347,7 @@ export default function Landing() {
                 <a href="#waitlist" className="btn accent">Join the waitlist →</a>
                 <a href="#how" className="btn ghost">See a sample PR</a>
               </div>
-              <div style={{ marginTop: 22, fontFamily: "var(--mono)", fontSize: 11, color: "var(--muted)", letterSpacing: ".15em", textTransform: "uppercase" }}>
+              <div style={{ marginTop: 22, fontFamily: "var(--mono)", fontSize: "0.6875rem", color: "var(--muted)", letterSpacing: ".15em", textTransform: "uppercase" }}>
                 Built on Temporal · your observability platform · GitHub · Vault
               </div>
             </div>
@@ -393,7 +391,7 @@ export default function Landing() {
 
           <section className="manifesto" id="how">
             <h2>You have a backlog of 412 low-priority errors. Nobody is going to touch them.</h2>
-            <p style={{ fontSize: 20, maxWidth: "56ch", marginTop: 20 }}>
+            <p className="ba-body" style={{ maxWidth: "56ch", marginLeft: 0, marginRight: 0 }}>
               Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.
             </p>
             <div className="stats">
