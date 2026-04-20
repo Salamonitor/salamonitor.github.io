@@ -10,12 +10,18 @@
   --hand: var(--font-hand), cursive;
   --head: var(--font-head), cursive;
   --mono: var(--font-mono), monospace;
-  /* fluid anchors: 375px -> 2000px viewport */
-  --page-max: 2000px;
-  --gutter: clamp(16px, 4vw, 80px);
+  /* fluid anchors: 375px -> 2000px viewport (page-max in rem so it scales with root) */
+  --page-max: 125rem;
+  --gutter: clamp(1rem, 4vw, 5rem);
   --edge: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
 }
 * { box-sizing: border-box; }
+/* Root font-size scales with viewport so rem-based clamps grow on large displays (4K etc.) */
+html { font-size: 16px; }
+@media (min-width: 1600px) { html { font-size: 17px; } }
+@media (min-width: 1920px) { html { font-size: 19px; } }
+@media (min-width: 2400px) { html { font-size: 22px; } }
+@media (min-width: 3200px) { html { font-size: 26px; } }
 html, body {
   margin: 0;
   background: var(--paper);
