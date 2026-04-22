@@ -11,6 +11,68 @@ const HOW_COPY = {
   sub: "Salamonitor turns a recurring error signature into a tiny, context-rich pull request: the fix, the trace, the affected services, the tests. Merge it, close it, or ignore it — we learn either way.",
 };
 
+const LANDING_STATS = [
+  { value: "412", label: "Errors in a median backlog" },
+  { value: "6", label: "Pipeline steps, nightly" },
+  { value: "~20m", label: "Per investigation, sandboxed" },
+  { value: "0", label: "Raw logs retained" },
+];
+
+type StepIconName = "scan" | "filter" | "trace" | "investigate" | "pr" | "learn";
+
+type StepItem = {
+  num: string;
+  title: string;
+  desc: string;
+  icon: StepIconName;
+};
+
+const PIPELINE_STEPS = [
+  { num: "01", title: "Sees everything", desc: "Continuously reads your production error stream. Nothing slips through.", icon: "scan" },
+  { num: "02", title: "Cuts through the noise", desc: "Groups repeats, skips the known, surfaces what actually matters.", icon: "filter" },
+  { num: "03", title: "Finds the source", desc: "Traces each error back through your services to the exact line of code.", icon: "trace" },
+  { num: "04", title: "Investigates like an engineer", desc: "Reasons about root cause in a sandbox. One error at a time.", icon: "investigate" },
+  { num: "05", title: "Ships the fix", desc: "Opens a clean, reviewable pull request with tests and full context.", icon: "pr" },
+  { num: "06", title: "Gets smarter", desc: "Learns from every merge, close, and comment. Tomorrow’s PRs are better.", icon: "learn" },
+] satisfies StepItem[];
+
+type FAQItem = { q: string; a: string };
+
+const FAQ_ITEMS: FAQItem[] = [
+  {
+    q: "What does Salamonitor actually do?",
+    a: "It reads your production error stream every night, groups recurring errors, investigates each one in an isolated sandbox, and opens a small, reviewable GitHub PR with the fix, the trace, and the affected services. You merge, close, or ignore.",
+  },
+  {
+    q: "Will it touch production code without me asking?",
+    a: "No. Salamonitor only opens pull requests. Nothing reaches main without a human merging it. Every PR has a tight scope, a generated changelog entry, and the exact error trace that triggered it.",
+  },
+  {
+    q: "What does it need access to?",
+    a: "Read access to your observability platform (Sentry, Datadog, Honeycomb, etc.), and a GitHub App scoped to the repos you choose. No raw logs are retained — only error signatures and the outcomes of past PRs.",
+  },
+  {
+    q: "How is this different from Copilot, Cursor, or other coding agents?",
+    a: "Those tools wait for you to start. Salamonitor starts on its own — from the actual errors your users are hitting in production. It’s a manager, not an assistant. You don’t prompt it; it ships work to your inbox.",
+  },
+  {
+    q: "What about errors it can't fix?",
+    a: "It tells you. Each investigation ends with one of: \"opened PR\", \"needs human—here’s what I found\", or \"already fixed in #N\". You always know why a thing did or didn’t ship.",
+  },
+  {
+    q: "Is my code sent to a model provider?",
+    a: "Only the minimum needed: the relevant files, the stack trace, and the error context. Investigations run in ephemeral sandboxes and are torn down on completion. Enterprise plans support self-hosted inference and VPC peering.",
+  },
+  {
+    q: "How long until I see the first PR?",
+    a: "Usually within 24 hours of connecting. The first run sweeps your existing backlog; from there it runs nightly and only acts on errors that are new, regressing, or rising in volume.",
+  },
+  {
+    q: "What happens if it gets one wrong?",
+    a: "You close the PR, optionally with a comment. Salamonitor remembers the outcome and won’t pitch a similar fix again. The system gets better at your codebase over time — not better at \"coding\" in general.",
+  },
+];
+
 export default function Landing() {
   return (
     <>
@@ -32,209 +94,347 @@ export default function Landing() {
         </div>
       </header>
 
-      <main id="top" className="page">
-        <section className="hero">
-          <span className="metabadge">{META_BADGE}</span>
-          <h1 dangerouslySetInnerHTML={{ __html: HERO_COPY.h1 }} />
-          <p className="hero-sub">{HERO_COPY.sub}</p>
-          <div className="ctas">
-            <a href="#waitlist" className="btn accent">
-              Join the waitlist →
-            </a>
-            <a href="#arch" className="btn ghost">
-              Read the architecture
-            </a>
-          </div>
-        </section>
-
-        <section className="manifesto">
-          <h2 className="ba-lede">You have a backlog of 412 low-priority errors. Nobody is going to touch them.</h2>
-
-          <div className="ba-grid">
-            <div className="ba-col">
-              <div className="ba-cap">
-                <span className="ba-tag before">Before</span>
-                <span className="ba-cap-t">your observability platform on a Tuesday</span>
-              </div>
-              <div className="obs">
-                <div className="obs-head">
-                  <span className="dot r" />
-                  <span className="dot y" />
-                  <span className="dot g" />
-                  <span className="obs-head-t">errors · production · last 24h</span>
-                  <span className="live-dot" />
-                  <span className="obs-head-state live">LIVE</span>
-                </div>
-                <div className="obs-kpis">
-                  <div className="kpi"><div className="kpi-n accent-n">412</div><div className="kpi-l">new errors</div></div>
-                  <div className="kpi"><div className="kpi-n">2,847</div><div className="kpi-l">events / hr</div></div>
-                  <div className="kpi"><div className="kpi-n">17</div><div className="kpi-l">services hit</div></div>
-                  <div className="kpi"><div className="kpi-n accent-n">↑ 23%</div><div className="kpi-l">vs last week</div></div>
-                </div>
-                <div className="obs-bar tall">
-                  <svg viewBox="0 0 400 100" preserveAspectRatio="none">
-                    <g stroke="var(--theme-color-gridline)" strokeWidth="1">
-                      <line x1="0" y1="25" x2="400" y2="25" /><line x1="0" y1="50" x2="400" y2="50" /><line x1="0" y1="75" x2="400" y2="75" />
-                    </g>
-                    <path d="M0,22 L18,38 L36,14 L54,48 L72,8 L90,42 L108,12 L126,55 L144,18 L162,40 L180,5 L198,30 L216,20 L234,44 L252,10 L270,36 L288,16 L306,52 L324,22 L342,40 L360,14 L378,32 L400,20 L400,100 L0,100 Z" fill="var(--theme-color-chart-accent-fill)" stroke="none" />
-                    <path d="M0,22 L18,38 L36,14 L54,48 L72,8 L90,42 L108,12 L126,55 L144,18 L162,40 L180,5 L198,30 L216,20 L234,44 L252,10 L270,36 L288,16 L306,52 L324,22 L342,40 L360,14 L378,32 L400,20" fill="none" stroke="var(--theme-color-chart-accent-stroke)" strokeWidth="1.5" />
-                    <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)">
-                      <text x="2" y="98">00:00</text><text x="180" y="98">12:00</text><text x="370" y="98">24:00</text>
-                    </g>
-                  </svg>
-                </div>
-                <div className="obs-rows">
-                  <div className="row-e sev-hi"><span className="bd">■</span><span className="msg"><span>TypeError: cannot read &#39;sub&#39; of undefined</span><span className="svc">api-gateway</span></span><span className="cnt">132</span></div>
-                  <div className="row-e sev-hi"><span className="bd">■</span><span className="msg"><span>StripeError: idempotency_key required</span><span className="svc">billing</span></span><span className="cnt">87</span></div>
-                  <div className="row-e sev-md"><span className="bd">■</span><span className="msg"><span>Timeout waiting for pg pool (5000ms)</span><span className="svc">orders</span></span><span className="cnt">64</span></div>
-                  <div className="row-e sev-md"><span className="bd">■</span><span className="msg"><span>KeyError: &#39;user_id&#39; in webhook payload</span><span className="svc">webhooks</span></span><span className="cnt">41</span></div>
-                  <div className="row-e sev-lo"><span className="bd">■</span><span className="msg"><span>DeprecationWarning: legacy.decode()</span><span className="svc">workers</span></span><span className="cnt">29</span></div>
-                  <div className="row-e sev-lo"><span className="bd">■</span><span className="msg"><span>ConnectionReset on upstream /internal/v2</span><span className="svc">edge</span></span><span className="cnt">22</span></div>
-                  <div className="row-e sev-lo ghost"><span className="bd">■</span><span className="msg"><span>+ 399 more recurring errors…</span></span><span className="cnt">…</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div className="ba-arrow" aria-hidden="true">
-              <div className="ba-arrow-l">salamonitor</div>
-              <svg viewBox="0 0 80 50" width="80" height="50">
-                <path d="M6 25 Q 40 5 70 25 M58 16 L74 25 L62 36" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <div className="ba-arrow-l small">2 weeks</div>
-            </div>
-
-            <div className="ba-col">
-              <div className="ba-cap">
-                <span className="ba-tag after">After</span>
-                <span className="ba-cap-t">same dashboard, two weeks later</span>
-              </div>
-              <div className="obs after">
-                <div className="obs-head">
-                  <span className="dot r" /><span className="dot y" /><span className="dot g" />
-                  <span className="obs-head-t">errors · production · last 24h</span>
-                  <span className="live-dot ok" />
-                  <span className="obs-head-state ok">HEALTHY</span>
-                </div>
-                <div className="obs-kpis">
-                  <div className="kpi"><div className="kpi-n ok-n">3</div><div className="kpi-l">new errors</div></div>
-                  <div className="kpi"><div className="kpi-n">142</div><div className="kpi-l">events / hr</div></div>
-                  <div className="kpi"><div className="kpi-n ok-n">409</div><div className="kpi-l">PRs merged</div></div>
-                  <div className="kpi"><div className="kpi-n ok-n">↓ 95%</div><div className="kpi-l">vs before</div></div>
-                </div>
-                <div className="obs-bar tall">
-                  <svg viewBox="0 0 400 100" preserveAspectRatio="none">
-                    <g stroke="var(--theme-color-gridline)" strokeWidth="1">
-                      <line x1="0" y1="25" x2="400" y2="25" /><line x1="0" y1="50" x2="400" y2="50" /><line x1="0" y1="75" x2="400" y2="75" />
-                    </g>
-                    <path d="M0,85 L50,89 L100,83 L150,91 L200,86 L250,90 L300,84 L350,88 L400,86 L400,100 L0,100 Z" fill="var(--theme-color-chart-success-fill)" stroke="none" />
-                    <path d="M0,85 L50,89 L100,83 L150,91 L200,86 L250,90 L300,84 L350,88 L400,86" fill="none" stroke="var(--theme-color-chart-success-stroke)" strokeWidth="1.5" />
-                    <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)">
-                      <text x="2" y="98">00:00</text><text x="180" y="98">12:00</text><text x="370" y="98">24:00</text>
-                    </g>
-                  </svg>
-                </div>
-                <div className="obs-rows">
-                  <div className="row-e sev-md"><span className="bd">■</span><span className="msg"><span>RateLimit: external_api/v3</span><span className="svc new">new</span></span><span className="cnt">7</span></div>
-                  <div className="row-e sev-lo"><span className="bd">■</span><span className="msg"><span>FlakyTest: order_spec.rb:42</span><span className="svc">tests</span></span><span className="cnt">3</span></div>
-                  <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>TypeError: cannot read &#39;sub&#39; of undefined</span><span className="svc pr">PR #412 merged</span></span><span className="cnt">−0</span></div>
-                  <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>StripeError: idempotency_key required</span><span className="svc pr">PR #411 merged</span></span><span className="cnt">−0</span></div>
-                  <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>Timeout waiting for pg pool (5000ms)</span><span className="svc pr">PR #408 merged</span></span><span className="cnt">−0</span></div>
-                  <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>KeyError: &#39;user_id&#39; in webhook payload</span><span className="svc pr">PR #404 merged</span></span><span className="cnt">−0</span></div>
-                  <div className="row-e empty ghost"><span className="bd"> </span><span className="msg"><span>— quiet —</span></span><span className="cnt"> </span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p className="ba-body">
-            Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.
-          </p>
-
-          <div className="stats ba-stats">
-            <div className="st"><div className="n">412</div><div className="l">Errors in a median backlog</div></div>
-            <div className="st"><div className="n">6</div><div className="l">Pipeline steps, nightly</div></div>
-            <div className="st"><div className="n">~20m</div><div className="l">Per investigation, sandboxed</div></div>
-            <div className="st"><div className="n">0</div><div className="l">Raw logs retained</div></div>
-          </div>
-        </section>
-
-        <section id="arch">
-          <div className="arch-grid">
-            <div>
-              <div className="eyebrow">{HOW_COPY.eyebrow}</div>
-              <h2 className="arch-h2">{HOW_COPY.h2}</h2>
-              <p className="arch-p">{HOW_COPY.sub}</p>
-              <ul className="arch-list">
-                <li>▪ Small, scoped diffs. One recurring error per PR.</li>
-                <li>▪ Context: error signature, 24h occurrence count, affected services, trace link.</li>
-                <li>▪ Tests added. Lint clean before it&#39;s opened.</li>
-                <li>▪ Labeled <span className="label">paper-cut</span> <span className="label">auto</span>. Easy to filter out.</li>
-                <li>▪ You merge, close, or ignore. Memory updates either way.</li>
-              </ul>
-            </div>
-
-            <div className="pr">
-              <div className="pr-head">
-                <span className="dot r" /><span className="dot y" /><span className="dot g" />
-                <span className="pr-head-t">github.com / acme / billing-svc · PR #4821</span>
-              </div>
-              <div className="pr-title">
-                <div className="tt">fix(stripe): guard webhook replay when idempotency_key is null</div>
-                <div className="meta">
-                  salamonitor-bot wants to merge 1 commit · opened 03:41 UTC · +8 / −3 ·{" "}
-                  <span className="label">paper-cut</span> <span className="label">auto</span>
-                </div>
-              </div>
-              <div className="pr-body">
-                <div className="hunk">
-                  <span className="ctx">  def handle_webhook(event):</span>
-                  <span className="del">-     key = event[&quot;idempotency_key&quot;]</span>
-                  <span className="add">+     key = event.get(&quot;idempotency_key&quot;)</span>
-                  <span className="add">+     if key is None:</span>
-                  <span className="add">+         return SKIP</span>
-                  <span className="ctx">      if replay_store.seen(key):</span>
-                </div>
-                <div>
-                  Error signature <b>err_8a3e…2b</b> · 41 occurrences / 24h · services: <b>billing-svc</b>
-                </div>
-              </div>
-              <div className="pr-foot">
-                <span className="label">✓ tests pass</span>
-                <span className="label">✓ lint</span>
-                <span>salamonitor · run_2041</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="arch-pipeline-head eyebrow">What it actually does</div>
-          <div className="pipeline">
-            <div className="step"><span className="num">01</span><span className="t">Sees everything</span><span className="d">Continuously reads your production error stream. Nothing slips through.</span></div>
-            <div className="step"><span className="num">02</span><span className="t">Cuts through the noise</span><span className="d">Groups repeats, skips the known, surfaces what actually matters.</span></div>
-            <div className="step"><span className="num">03</span><span className="t">Finds the source</span><span className="d">Traces each error back through your services to the exact line of code.</span></div>
-            <div className="step"><span className="num">04</span><span className="t">Investigates like an engineer</span><span className="d">Reasons about root cause in a sandbox. One error at a time.</span></div>
-            <div className="step"><span className="num">05</span><span className="t">Ships the fix</span><span className="d">Opens a clean, reviewable pull request with tests and full context.</span></div>
-            <div className="step"><span className="num">06</span><span className="t">Gets smarter</span><span className="d">Learns from every merge, close, and comment. Tomorrow&#39;s PRs are better.</span></div>
-          </div>
-        </section>
-
-        <Pricing />
-        <FAQ />
-
-        <section id="waitlist">
-          <h2>It&#39;s ready. Is your backlog?</h2>
-          <div className="ctas">
-            <a className="btn accent" href="#">Join the waitlist →</a>
-            <a className="btn ghost" href="#">Read the docs</a>
-          </div>
-        </section>
-      </main>
+      <PipelineLanding />
 
       <footer>
         <div className="grow">Salamonitor · the manager of your infra · est. 2026</div>
-        <div>docs</div><div>changelog</div><div>security</div><div>privacy</div>
+        <div>docs</div>
+        <div>changelog</div>
+        <div>security</div>
+        <div>privacy</div>
         <div>hello@salamonitor.dev</div>
       </footer>
     </>
+  );
+}
+
+function PipelineLanding() {
+  return (
+    <main id="top" className="page">
+      <section className="hero">
+        <span className="metabadge">{META_BADGE}</span>
+        <h1 dangerouslySetInnerHTML={{ __html: HERO_COPY.h1 }} />
+        <p className="hero-sub">{HERO_COPY.sub}</p>
+        <div className="ctas">
+          <a href="#waitlist" className="btn accent">
+            Join the waitlist →
+          </a>
+          <a href="#architecture" className="btn ghost">
+            Read the architecture
+          </a>
+        </div>
+      </section>
+
+      <section className="manifesto">
+        <ManifestoHeading />
+
+        <div className="ba-grid">
+          <div className="ba-col">
+            <div className="ba-cap">
+              <span className="ba-tag before">Before</span>
+              <span className="ba-cap-t">your observability platform on a Tuesday</span>
+            </div>
+            <div className="obs">
+              <div className="obs-head">
+                <span className="dot r" />
+                <span className="dot y" />
+                <span className="dot g" />
+                <span className="obs-head-t">errors · production · last 24h</span>
+                <span className="live-dot" />
+                <span className="obs-head-state live">LIVE</span>
+              </div>
+              <div className="obs-kpis">
+                <div className="kpi"><div className="kpi-n accent-n">412</div><div className="kpi-l">new errors</div></div>
+                <div className="kpi"><div className="kpi-n">2,847</div><div className="kpi-l">events / hr</div></div>
+                <div className="kpi"><div className="kpi-n">17</div><div className="kpi-l">services hit</div></div>
+                <div className="kpi"><div className="kpi-n accent-n">↑ 23%</div><div className="kpi-l">vs last week</div></div>
+              </div>
+              <div className="obs-bar tall">
+                <svg viewBox="0 0 400 100" preserveAspectRatio="none">
+                  <g stroke="var(--theme-color-gridline)" strokeWidth="1">
+                    <line x1="0" y1="25" x2="400" y2="25" />
+                    <line x1="0" y1="50" x2="400" y2="50" />
+                    <line x1="0" y1="75" x2="400" y2="75" />
+                  </g>
+                  <path d="M0,22 L18,38 L36,14 L54,48 L72,8 L90,42 L108,12 L126,55 L144,18 L162,40 L180,5 L198,30 L216,20 L234,44 L252,10 L270,36 L288,16 L306,52 L324,22 L342,40 L360,14 L378,32 L400,20 L400,100 L0,100 Z" fill="var(--theme-color-chart-accent-fill)" stroke="none" />
+                  <path d="M0,22 L18,38 L36,14 L54,48 L72,8 L90,42 L108,12 L126,55 L144,18 L162,40 L180,5 L198,30 L216,20 L234,44 L252,10 L270,36 L288,16 L306,52 L324,22 L342,40 L360,14 L378,32 L400,20" fill="none" stroke="var(--theme-color-chart-accent-stroke)" strokeWidth="1.5" />
+                  <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)">
+                    <text x="2" y="98">00:00</text>
+                    <text x="180" y="98">12:00</text>
+                    <text x="370" y="98">24:00</text>
+                  </g>
+                </svg>
+              </div>
+              <div className="obs-rows">
+                <div className="row-e sev-hi"><span className="bd">■</span><span className="msg"><span>TypeError: cannot read &#39;sub&#39; of undefined</span><span className="svc">api-gateway</span></span><span className="cnt">132</span></div>
+                <div className="row-e sev-hi"><span className="bd">■</span><span className="msg"><span>StripeError: idempotency_key required</span><span className="svc">billing</span></span><span className="cnt">87</span></div>
+                <div className="row-e sev-md"><span className="bd">■</span><span className="msg"><span>Timeout waiting for pg pool (5000ms)</span><span className="svc">orders</span></span><span className="cnt">64</span></div>
+                <div className="row-e sev-md"><span className="bd">■</span><span className="msg"><span>KeyError: &#39;user_id&#39; in webhook payload</span><span className="svc">webhooks</span></span><span className="cnt">41</span></div>
+                <div className="row-e sev-lo"><span className="bd">■</span><span className="msg"><span>DeprecationWarning: legacy.decode()</span><span className="svc">workers</span></span><span className="cnt">29</span></div>
+                <div className="row-e sev-lo"><span className="bd">■</span><span className="msg"><span>ConnectionReset on upstream /internal/v2</span><span className="svc">edge</span></span><span className="cnt">22</span></div>
+                <div className="row-e sev-lo ghost"><span className="bd">■</span><span className="msg"><span>+ 399 more recurring errors…</span></span><span className="cnt">…</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="ba-arrow" aria-hidden="true">
+            <div className="ba-arrow-l">salamonitor</div>
+            <svg viewBox="0 0 80 50" width="80" height="50">
+              <path d="M6 25 Q 40 5 70 25 M58 16 L74 25 L62 36" fill="none" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <div className="ba-arrow-l small">2 weeks</div>
+          </div>
+
+          <div className="ba-col">
+            <div className="ba-cap">
+              <span className="ba-tag after">After</span>
+              <span className="ba-cap-t">same dashboard, two weeks later</span>
+            </div>
+            <div className="obs after">
+              <div className="obs-head">
+                <span className="dot r" />
+                <span className="dot y" />
+                <span className="dot g" />
+                <span className="obs-head-t">errors · production · last 24h</span>
+                <span className="live-dot ok" />
+                <span className="obs-head-state ok">HEALTHY</span>
+              </div>
+              <div className="obs-kpis">
+                <div className="kpi"><div className="kpi-n ok-n">3</div><div className="kpi-l">new errors</div></div>
+                <div className="kpi"><div className="kpi-n">142</div><div className="kpi-l">events / hr</div></div>
+                <div className="kpi"><div className="kpi-n ok-n">409</div><div className="kpi-l">PRs merged</div></div>
+                <div className="kpi"><div className="kpi-n ok-n">↓ 95%</div><div className="kpi-l">vs before</div></div>
+              </div>
+              <div className="obs-bar tall">
+                <svg viewBox="0 0 400 100" preserveAspectRatio="none">
+                  <g stroke="var(--theme-color-gridline)" strokeWidth="1">
+                    <line x1="0" y1="25" x2="400" y2="25" />
+                    <line x1="0" y1="50" x2="400" y2="50" />
+                    <line x1="0" y1="75" x2="400" y2="75" />
+                  </g>
+                  <path d="M0,85 L50,89 L100,83 L150,91 L200,86 L250,90 L300,84 L350,88 L400,86 L400,100 L0,100 Z" fill="var(--theme-color-chart-success-fill)" stroke="none" />
+                  <path d="M0,85 L50,89 L100,83 L150,91 L200,86 L250,90 L300,84 L350,88 L400,86" fill="none" stroke="var(--theme-color-chart-success-stroke)" strokeWidth="1.5" />
+                  <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)">
+                    <text x="2" y="98">00:00</text>
+                    <text x="180" y="98">12:00</text>
+                    <text x="370" y="98">24:00</text>
+                  </g>
+                </svg>
+              </div>
+              <div className="obs-rows">
+                <div className="row-e sev-md"><span className="bd">■</span><span className="msg"><span>RateLimit: external_api/v3</span><span className="svc new">new</span></span><span className="cnt">7</span></div>
+                <div className="row-e sev-lo"><span className="bd">■</span><span className="msg"><span>FlakyTest: order_spec.rb:42</span><span className="svc">tests</span></span><span className="cnt">3</span></div>
+                <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>TypeError: cannot read &#39;sub&#39; of undefined</span><span className="svc pr">PR #412 merged</span></span><span className="cnt">−0</span></div>
+                <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>StripeError: idempotency_key required</span><span className="svc pr">PR #411 merged</span></span><span className="cnt">−0</span></div>
+                <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>Timeout waiting for pg pool (5000ms)</span><span className="svc pr">PR #408 merged</span></span><span className="cnt">−0</span></div>
+                <div className="row-e fixed"><span className="bd">✓</span><span className="msg"><span>KeyError: &#39;user_id&#39; in webhook payload</span><span className="svc pr">PR #404 merged</span></span><span className="cnt">−0</span></div>
+                <div className="row-e empty ghost"><span className="bd"> </span><span className="msg"><span>— quiet —</span></span><span className="cnt"> </span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p className="ba-body">
+          Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.
+        </p>
+
+        <LandingStats />
+      </section>
+
+      <section id="architecture">
+        <div className="arch-grid">
+          <div>
+            <div className="eyebrow">{HOW_COPY.eyebrow}</div>
+            <h2 className="arch-h2">{HOW_COPY.h2}</h2>
+            <p className="arch-p">{HOW_COPY.sub}</p>
+            <ul className="arch-list">
+              <li>▪ Small, scoped diffs. One recurring error per PR.</li>
+              <li>▪ Context: error signature, 24h occurrence count, affected services, trace link.</li>
+              <li>▪ Tests added. Lint clean before it&#39;s opened.</li>
+              <li>▪ Labeled <span className="label">paper-cut</span> <span className="label">auto</span>. Easy to filter out.</li>
+              <li>▪ You merge, close, or ignore. Memory updates either way.</li>
+            </ul>
+          </div>
+
+          <ArchitecturePrCard />
+        </div>
+      </section>
+
+      <PipelineSection
+        id="how"
+        eyebrow="What it actually does"
+        title="Six quiet steps from error backlog to pull request."
+        sub="The product flow is simple on purpose: watch the stream, narrow the problem, trace it to code, investigate in a sandbox, then open one clean PR."
+        steps={PIPELINE_STEPS}
+      />
+
+      <Pricing />
+      <FAQ />
+
+      <section id="waitlist">
+        <h2>It&#39;s ready. Is your backlog?</h2>
+        <div className="ctas">
+          <a className="btn accent" href="#top">Join the waitlist →</a>
+          <a className="btn ghost" href="#top">Read the docs</a>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function ManifestoHeading() {
+  return (
+    <h2 className="ba-lede">
+      You have a backlog of 412 low-priority errors.
+      <span className="ba-punch">Nobody is going to touch them.</span>
+    </h2>
+  );
+}
+
+function LandingStats() {
+  return (
+    <div className="stats ba-stats">
+      {LANDING_STATS.map((stat) => (
+        <div className="st" key={stat.label}>
+          <div className="n">{stat.value}</div>
+          <div className="l">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+type PipelineSectionProps = {
+  eyebrow: string;
+  title: string;
+  sub: string;
+  steps: StepItem[];
+  id?: string;
+};
+
+function PipelineSection({ eyebrow, title, sub, steps, id }: PipelineSectionProps) {
+  return (
+    <section id={id} className="pipeline-section">
+      <div className="pipeline-copy">
+        <div className="eyebrow">{eyebrow}</div>
+        <h2 className="pipeline-h2">{title}</h2>
+        <p className="pipeline-sub">{sub}</p>
+      </div>
+
+      <div className="pipeline">
+        {steps.map((step) => (
+          <StepCard key={step.num} step={step} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function StepCard({ step }: { step: StepItem }) {
+  return (
+    <div className="step">
+      <div className="step-top">
+        <span className="step-icon" aria-hidden="true">
+          <StepIcon name={step.icon} />
+        </span>
+        <span className="num">{step.num}</span>
+      </div>
+      <span className="t">{step.title}</span>
+      <span className="d">{step.desc}</span>
+    </div>
+  );
+}
+
+function StepIcon({ name }: { name: StepIconName }) {
+  switch (name) {
+    case "scan":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3.5 12c1.8-3.8 4.9-5.7 8.5-5.7s6.7 1.9 8.5 5.7c-1.8 3.8-4.9 5.7-8.5 5.7S5.3 15.8 3.5 12Z" />
+          <circle cx="12" cy="12" r="2.6" />
+          <path d="M12 3.5v1.8M4.8 6.1l1.3 1.3M19.2 6.1l-1.3 1.3" />
+        </svg>
+      );
+    case "filter":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 6.5h16l-6.4 7.1v4.6l-3.2-1.8v-2.8L4 6.5Z" />
+          <path d="M9 6.5 7.4 4.9M15 6.5l1.6-1.6" />
+        </svg>
+      );
+    case "trace":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="6" cy="6" r="2.2" />
+          <circle cx="18" cy="7" r="2.2" />
+          <circle cx="9" cy="17" r="2.2" />
+          <circle cx="18" cy="18" r="2.2" />
+          <path d="M7.8 7.2 16 8.1M7.4 7.8 8.1 15M10.9 16.4l5.2 1" />
+        </svg>
+      );
+    case "investigate":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M10.5 17a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11Z" />
+          <path d="m14.5 14.5 4 4" />
+          <path d="M10.5 8.5v4M8.5 10.5h4" />
+        </svg>
+      );
+    case "pr":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="7" cy="5.5" r="2.2" />
+          <circle cx="17" cy="18.5" r="2.2" />
+          <circle cx="17" cy="7.5" r="2.2" />
+          <path d="M7 7.7v9.6c0 .7.6 1.2 1.2 1.2h6.6M15.4 7.5H9.2c-.7 0-1.2.5-1.2 1.2v1.8" />
+        </svg>
+      );
+    case "learn":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 4.5a7.5 7.5 0 1 1-6.2 3.3" />
+          <path d="M4.6 5v4.8h4.8" />
+          <path d="M12 8.5v3.4l2.6 1.6" />
+        </svg>
+      );
+  }
+}
+
+function ArchitecturePrCard() {
+  return (
+    <div className="pr">
+      <div className="pr-head">
+        <span className="dot r" />
+        <span className="dot y" />
+        <span className="dot g" />
+        <span className="pr-head-t">github.com / acme / billing-svc · PR #4821</span>
+      </div>
+      <div className="pr-title">
+        <div className="tt">fix(stripe): guard webhook replay when idempotency_key is null</div>
+        <div className="meta">
+          salamonitor-bot wants to merge 1 commit · opened 03:41 UTC · +8 / −3 ·{" "}
+          <span className="label">paper-cut</span> <span className="label">auto</span>
+        </div>
+      </div>
+      <div className="pr-body">
+        <div className="hunk">
+          <span className="ctx">  def handle_webhook(event):</span>
+          <span className="del">-     key = event[&quot;idempotency_key&quot;]</span>
+          <span className="add">+     key = event.get(&quot;idempotency_key&quot;)</span>
+          <span className="add">+     if key is None:</span>
+          <span className="add">+         return SKIP</span>
+          <span className="ctx">      if replay_store.seen(key):</span>
+        </div>
+        <div>
+          Error signature <b>err_8a3e…2b</b> · 41 occurrences / 24h · services: <b>billing-svc</b>
+        </div>
+      </div>
+      <div className="pr-foot">
+        <span className="label">✓ tests pass</span>
+        <span className="label">✓ lint</span>
+        <span>salamonitor · run_2041</span>
+      </div>
+    </div>
   );
 }
 
@@ -267,42 +467,6 @@ function Pricing() {
     </section>
   );
 }
-
-type FAQItem = { q: string; a: string };
-const FAQ_ITEMS: FAQItem[] = [
-  {
-    q: "What does Salamonitor actually do?",
-    a: "It reads your production error stream every night, groups recurring errors, investigates each one in an isolated sandbox, and opens a small, reviewable GitHub PR with the fix, the trace, and the affected services. You merge, close, or ignore.",
-  },
-  {
-    q: "Will it touch production code without me asking?",
-    a: "No. Salamonitor only opens pull requests. Nothing reaches main without a human merging it. Every PR has a tight scope, a generated changelog entry, and the exact error trace that triggered it.",
-  },
-  {
-    q: "What does it need access to?",
-    a: "Read access to your observability platform (Sentry, Datadog, Honeycomb, etc.), and a GitHub App scoped to the repos you choose. No raw logs are retained — only error signatures and the outcomes of past PRs.",
-  },
-  {
-    q: "How is this different from Copilot, Cursor, or other coding agents?",
-    a: "Those tools wait for you to start. Salamonitor starts on its own — from the actual errors your users are hitting in production. It's a manager, not an assistant. You don't prompt it; it ships work to your inbox.",
-  },
-  {
-    q: "What about errors it can't fix?",
-    a: "It tells you. Each investigation ends with one of: \"opened PR\", \"needs human—here's what I found\", or \"already fixed in #N\". You always know why a thing did or didn't ship.",
-  },
-  {
-    q: "Is my code sent to a model provider?",
-    a: "Only the minimum needed: the relevant files, the stack trace, and the error context. Investigations run in ephemeral sandboxes and are torn down on completion. Enterprise plans support self-hosted inference and VPC peering.",
-  },
-  {
-    q: "How long until I see the first PR?",
-    a: "Usually within 24 hours of connecting. The first run sweeps your existing backlog; from there it runs nightly and only acts on errors that are new, regressing, or rising in volume.",
-  },
-  {
-    q: "What happens if it gets one wrong?",
-    a: "You close the PR, optionally with a comment. Salamonitor remembers the outcome and won't pitch a similar fix again. The system gets better at your codebase over time — not better at \"coding\" in general.",
-  },
-];
 
 function FAQ() {
   return (
