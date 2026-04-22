@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
-import { Caveat, Kalam, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const caveat = Caveat({
-  variable: "--font-head",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
 });
 
-const kalam = Kalam({
-  variable: "--font-hand",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-grotesk",
   subsets: ["latin"],
-  weight: ["300", "400", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -34,9 +32,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${caveat.variable} ${kalam.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body data-theme="neo-light">{children}</body>
     </html>
   );
 }
