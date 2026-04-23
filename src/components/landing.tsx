@@ -614,21 +614,43 @@ function Pricing() {
           const plan = PLAN_FEATURES[tier];
           const isFeatured = tier === FEATURED_TIER;
           const isEnterprise = tier === "enterprise";
+          const priceLabel = TIER_PRICES[tier];
+          const hasMonthlySuffix = priceLabel.endsWith("/mo");
+          const priceValue = hasMonthlySuffix ? priceLabel.slice(0, -3) : priceLabel;
 
           return (
             <div key={tier} className={`tier${isFeatured ? " hi" : ""}`}>
-              {isFeatured && <div className="ribbon">Recommended</div>}
-              <div className="tname">{TIER_LABELS[tier]}</div>
-              <div className="price">{TIER_PRICES[tier]}</div>
-              {plan.includes && <p className="includes">{plan.includes}</p>}
-              <ul>
-                {plan.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
-                ))}
-              </ul>
-              <a className={`btn${isFeatured ? " accent" : " ghost"}`} href={isEnterprise ? CONTACT_CTA.href : PRIMARY_CTA.href}>
-                {isEnterprise ? "Contact sales" : PRIMARY_CTA.label}
-              </a>
+              <div className="tier-header">
+                <div className="tier-topline">
+                  <div className="tname">{TIER_LABELS[tier]}</div>
+                  {isFeatured && <div className="ribbon">Recommended</div>}
+                </div>
+                <div className="price-line">
+                  <span className="price">{priceValue}</span>
+                  {hasMonthlySuffix && <span className="price-unit">/mo</span>}
+                </div>
+                {plan.includes && <p className="includes">{plan.includes}</p>}
+              </div>
+              <div className="tier-content">
+                <ul>
+                  {plan.features.map((feature) => (
+                    <li key={feature}>
+                      <span className="tier-check" aria-hidden="true">
+                        ✓
+                      </span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="tier-footer">
+                <a
+                  className={`btn tier-button${isFeatured ? " accent" : " ghost"}`}
+                  href={isEnterprise ? CONTACT_CTA.href : PRIMARY_CTA.href}
+                >
+                  {isEnterprise ? "Contact sales" : PRIMARY_CTA.label}
+                </a>
+              </div>
             </div>
           );
         })}
