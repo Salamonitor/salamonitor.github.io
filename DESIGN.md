@@ -123,7 +123,7 @@ The page is desktop-forward but must collapse cleanly:
 * The architecture section shifts from two columns to one.
 * The pipeline runs as 6 columns on large screens, 3 columns on medium screens, and 2 columns on small screens.
 * Pricing collapses from 3 columns to 2, then to 1.
-* FAQ collapses from 2 columns to 1.
+* FAQ stays in a single column so expanded answers do not create broken paired-row layouts.
 
 ### Large Screens
 

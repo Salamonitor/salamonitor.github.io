@@ -901,16 +901,32 @@ p {
 }
 .faq-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 clamp(24px, 2.5vw, 56px);
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 72rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   border-top: 1.5px solid var(--theme-color-border-strong);
 }
-.faq-list details {
+.faq-item details {
+  width: 100%;
+  background: transparent;
   border-bottom: 1.5px dashed var(--rule);
-  padding: clamp(14px, 1.2vw, 28px) 4px;
+  border-radius: 10px;
+  padding: clamp(14px, 1.2vw, 28px) clamp(8px, 1vw, 18px);
   position: relative;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+.faq-item details[open] {
+  background: var(--paper-2);
+  box-shadow: inset 0 0 0 1px var(--theme-color-border-strong);
+}
+.faq-item:last-child details {
+  border-bottom: 0;
 }
 .faq-list summary {
+  width: 100%;
+  cursor: pointer;
   list-style: none;
   font-family: var(--head);
   font-size: clamp(1.1875rem, 0.98rem + 0.75vw, min(2rem, 36px));
@@ -924,6 +940,10 @@ p {
   text-wrap: balance;
 }
 .faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
 .faq-list summary::after {
   content: "+";
   font-family: var(--mono);
@@ -935,11 +955,13 @@ p {
 .faq-list details[open] summary::after { content: "−"; }
 .faq-list .a {
   margin-top: 0.75em;
+  width: 100%;
   font-family: var(--hand);
   font-size: clamp(1rem, 0.96rem + 0.24vw, min(1.25rem, 20px));
   line-height: 1.6;
-  color: var(--ink);
-  max-width: 55ch;
+  color: var(--ink-2);
+  max-width: none;
+  padding-right: clamp(20px, 4vw, 56px);
 }
 
 /* ============================================================
@@ -1070,5 +1092,3 @@ footer .grow { flex: 1 1 100%; }
   }
   .tweaks-toggle { right: 10px; bottom: 10px; }
 }
-  cursor: pointer;
-  .faq-list { grid-template-columns: 1fr; }
