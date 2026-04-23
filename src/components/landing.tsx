@@ -1,3 +1,4 @@
+import AnimatedLandingStats from "@/components/animated-landing-stats";
 import { PLAN_FEATURES, TIER_LABELS, TIER_ORDER, TIER_PRICES, type TierKey } from "@/lib/pricing";
 
 type StepIconName = "scan" | "filter" | "trace" | "investigate" | "pr" | "learn";
@@ -15,8 +16,10 @@ type FAQItem = {
 };
 
 type MetricItem = {
-  value: string;
+  value: number;
   label: string;
+  prefix?: string;
+  suffix?: string;
 };
 
 type TrendDirection = "up" | "down";
@@ -47,10 +50,10 @@ const CONTACT_CTA = {
 const FEATURED_TIER: TierKey = "growth";
 
 const LANDING_STATS: MetricItem[] = [
-  { value: "412", label: "Errors in a median backlog" },
-  { value: "6", label: "Pipeline steps, nightly" },
-  { value: "~20m", label: "Per investigation, sandboxed" },
-  { value: "0", label: "Raw logs retained" },
+  { value: 412, label: "Errors in a median backlog" },
+  { value: 6, label: "Pipeline steps, nightly" },
+  { value: 20, label: "Per investigation, sandboxed", prefix: "~", suffix: "m" },
+  { value: 0, label: "Raw logs retained" },
 ];
 
 const BEFORE_BAR_SERIES = [58, 41, 72, 33, 81, 47, 63, 87, 54, 69, 44, 77];
@@ -185,8 +188,6 @@ function ObservabilityBarChart({ bars, tone }: { bars: number[]; tone: Observabi
   const xOffset = (400 - totalWidth) / 2;
   const barFill =
     tone === "accent" ? "var(--theme-color-chart-accent-stroke)" : "var(--theme-color-chart-success-stroke)";
-  const barHalo =
-    tone === "accent" ? "var(--theme-color-chart-accent-fill)" : "var(--theme-color-chart-success-fill)";
 
   return (
     <svg viewBox="0 0 400 100" preserveAspectRatio="none" aria-hidden="true">
@@ -203,7 +204,6 @@ function ObservabilityBarChart({ bars, tone }: { bars: number[]; tone: Observabi
 
           return (
             <g key={`${tone}-${index}`}>
-              <rect x={x} y={y - 3} width={barWidth} height={height + 3} rx="2" fill={barHalo} />
               <rect x={x} y={y} width={barWidth} height={height} rx="2" fill={barFill} />
             </g>
           );
@@ -313,18 +313,17 @@ function CurrentLanding() {
           </div>
 
           <div className="ba-arrow" aria-hidden="true">
-            <div className="ba-arrow-l">salamonitor</div>
-            <svg viewBox="0 0 80 50" width="80" height="50">
+            <svg className="ba-arrow-mark" viewBox="0 0 112 64" width="112" height="64">
               <path
-                d="M6 25 Q 40 5 70 25 M58 16 L74 25 L62 36"
+                d="M28 32 H74"
                 fill="none"
-                stroke="var(--ink)"
-                strokeWidth="2"
+                stroke="currentColor"
+                strokeWidth="3"
                 strokeLinecap="round"
-                strokeLinejoin="round"
               />
+              <path d="M62 20 L78 32 L62 44" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <div className="ba-arrow-l small">2 weeks</div>
+            <div className="ba-arrow-time">2 weeks</div>
           </div>
 
           <div className="ba-col">
@@ -483,16 +482,7 @@ function ManifestoHeading() {
 }
 
 function LandingStats({ className }: { className?: string }) {
-  return (
-    <div className={`stats${className ? ` ${className}` : ""}`}>
-      {LANDING_STATS.map((stat) => (
-        <div className="st" key={stat.label}>
-          <div className="n">{stat.value}</div>
-          <div className="l">{stat.label}</div>
-        </div>
-      ))}
-    </div>
-  );
+  return <AnimatedLandingStats className={className} stats={LANDING_STATS} />;
 }
 
 type PipelineSectionProps = {
