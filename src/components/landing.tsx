@@ -165,8 +165,6 @@ function CurrentLanding() {
       <HeroSection />
 
       <section id="proof" className="manifesto">
-        <ManifestoHeading />
-
         <div className="ba-grid">
           <div className="ba-col">
             <div className="ba-cap">
@@ -429,6 +427,8 @@ function CurrentLanding() {
             </div>
           </div>
         </div>
+
+        <ManifestoHeading />
 
         <p className="ba-body">
           Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.

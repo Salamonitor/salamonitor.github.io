@@ -362,7 +362,6 @@ p {
 .hero .ctas {
   margin-top: clamp(0.75rem, 0.4rem + 0.8vw, min(1.5rem, 24px));
 }
-
 .metabadge {
   display: inline-block;
   font-family: var(--mono);
