@@ -1,7 +1,3 @@
-import Link from "next/link";
-
-export type LandingVariant = "current" | "proof" | "story";
-
 type StepIconName = "scan" | "filter" | "trace" | "investigate" | "pr" | "learn";
 
 type StepItem = {
@@ -21,17 +17,6 @@ type MetricItem = {
   label: string;
 };
 
-type ResultItem = {
-  title: string;
-  count: string;
-  detail: string;
-  tone?: "neutral" | "good";
-};
-
-type LandingProps = {
-  variant?: LandingVariant;
-};
-
 const META_BADGE = "The manager of your infra";
 
 const HERO_COPY = {
@@ -39,16 +24,9 @@ const HERO_COPY = {
   sub: "Salamonitor runs a 6-step pipeline over your observability platform - groups recurring errors, investigates each in a sandbox, and lands a tiny, boring GitHub PR with full context.",
 };
 
-const VARIANT_OPTIONS = [
-  { id: "current", label: "Current" },
-  { id: "proof", label: "Proof First" },
-  { id: "story", label: "Condensed" },
-] satisfies Array<{ id: LandingVariant; label: string }>;
-
-const HERO_SECONDARY_ACTION: Record<LandingVariant, { href: string; label: string }> = {
-  current: { href: "#architecture", label: "Read the architecture" },
-  proof: { href: "#proof", label: "See the proof" },
-  story: { href: "#flow", label: "See the flow" },
+const HERO_SECONDARY_ACTION = {
+  href: "#architecture",
+  label: "Read the architecture",
 };
 
 const LANDING_STATS: MetricItem[] = [
@@ -97,58 +75,6 @@ const PIPELINE_STEPS = [
   },
 ] satisfies StepItem[];
 
-const PROOF_POINTS = [
-  "One recurring error per PR. Small diffs stay mergeable.",
-  "Each PR carries the trace, the 24h count, the affected services, and the tests.",
-  "You merge, close, or ignore. Memory updates either way.",
-];
-
-const BEFORE_RESULTS: ResultItem[] = [
-  {
-    title: "Recurring errors",
-    count: "412",
-    detail: "new signatures stacked across 17 services",
-  },
-  {
-    title: "Top offender",
-    count: "132",
-    detail: "TypeError in api-gateway",
-  },
-  {
-    title: "Trend",
-    count: "↑ 23%",
-    detail: "week over week",
-  },
-];
-
-const AFTER_RESULTS: ResultItem[] = [
-  {
-    title: "New errors",
-    count: "3",
-    detail: "everything else already triaged",
-    tone: "good",
-  },
-  {
-    title: "PRs merged",
-    count: "409",
-    detail: "tiny fixes shipped without a project",
-    tone: "good",
-  },
-  {
-    title: "Trend",
-    count: "↓ 95%",
-    detail: "noise cut down from the original backlog",
-    tone: "good",
-  },
-];
-
-const FLOW_RESULTS: MetricItem[] = [
-  { value: "412", label: "before: recurring errors" },
-  { value: "17", label: "services hit" },
-  { value: "409", label: "PRs merged" },
-  { value: "3", label: "after: net-new errors" },
-];
-
 const FAQ_ITEMS: FAQItem[] = [
   {
     q: "What does Salamonitor actually do?",
@@ -184,7 +110,7 @@ const FAQ_ITEMS: FAQItem[] = [
   },
 ];
 
-export default function Landing({ variant = "current" }: LandingProps) {
+export default function Landing() {
   return (
     <>
       <header className="topnav">
@@ -205,11 +131,7 @@ export default function Landing({ variant = "current" }: LandingProps) {
         </div>
       </header>
 
-      <LandingVariantBar active={variant} />
-
-      {variant === "current" ? <CurrentLanding /> : null}
-      {variant === "proof" ? <ProofFirstLanding /> : null}
-      {variant === "story" ? <CondensedLanding /> : null}
+      <CurrentLanding />
 
       <footer>
         <div className="grow">Salamonitor · the manager of your infra · est. 2026</div>
@@ -223,32 +145,10 @@ export default function Landing({ variant = "current" }: LandingProps) {
   );
 }
 
-function LandingVariantBar({ active }: { active: LandingVariant }) {
-  return (
-    <div className="variant-bar" aria-label="Landing page variants">
-      <span className="variant-bar-label">Variants</span>
-      {VARIANT_OPTIONS.map((option) => {
-        const href = option.id === "current" ? "/" : `/${option.id}`;
-
-        return (
-          <Link
-            key={option.id}
-            href={href}
-            className={`variant-pill${option.id === active ? " is-active" : ""}`}
-            aria-current={option.id === active ? "page" : undefined}
-          >
-            {option.label}
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
-
 function CurrentLanding() {
   return (
     <main id="top" className="page">
-      <HeroSection variant="current" />
+      <HeroSection />
 
       <section id="proof" className="manifesto">
         <ManifestoHeading />
@@ -560,120 +460,7 @@ function CurrentLanding() {
     </main>
   );
 }
-
-function ProofFirstLanding() {
-  return (
-    <main id="top" className="page">
-      <HeroSection variant="proof" />
-
-      <section id="proof" className="proof-section">
-        <div className="proof-copy">
-          <div className="eyebrow">Recurring error → pull request</div>
-          <h2 className="proof-h2">One recurring error becomes one small GitHub PR.</h2>
-          <p className="proof-p">
-            The second screen should answer the only question that matters: what lands in GitHub? Start with the artifact, show the scope, then explain the system behind it.
-          </p>
-          <ul className="proof-list">
-            {PROOF_POINTS.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
-          <MiniStats stats={LANDING_STATS} />
-        </div>
-
-        <div className="proof-stack">
-          <CompactIssueCard />
-          <ArchitecturePrCard />
-        </div>
-      </section>
-
-      <PipelineSection
-        id="how"
-        eyebrow="How it works"
-        title="The flow stays tight: find the error, trace it, ship the fix."
-        sub="The page only expands once the core promise is proven. After that, the six-step pipeline explains how Salamonitor gets from noisy backlog to reviewable pull request without asking your team to babysit it."
-        steps={PIPELINE_STEPS}
-      />
-
-      <ResultsSection />
-      <Pricing />
-      <FAQ />
-      <WaitlistSection />
-    </main>
-  );
-}
-
-function CondensedLanding() {
-  return (
-    <main id="top" className="page">
-      <HeroSection variant="story" />
-
-      <section id="proof" className="flow-section">
-        <div className="pipeline-copy">
-          <div className="eyebrow">The whole product in one pass</div>
-          <h2 className="flow-h2">Watch the backlog. Investigate in a sandbox. Open the PR.</h2>
-          <p className="pipeline-sub">
-            No giant dashboard and no text sandwich. The first scroll tells the full story, then the rest of the page adds detail for people who want it.
-          </p>
-        </div>
-
-        <div id="flow" className="storyboard">
-          <StoryCard
-            step="01"
-            title="Watch the stream"
-            desc="Recurring signatures are grouped so 412 paper-cuts become a ranked queue instead of background noise."
-          >
-            <CompactIssueCard tone="inline" />
-          </StoryCard>
-          <StoryCard
-            step="02"
-            title="Investigate in a sandbox"
-            desc="Each group gets its own isolated run with traces, affected services, and a root-cause pass."
-          >
-            <SandboxCard />
-          </StoryCard>
-          <StoryCard
-            step="03"
-            title="Open the small PR"
-            desc="Salamonitor lands a tiny, reviewable fix with tests, labels, and enough context to merge or close fast."
-          >
-            <MiniPrCard />
-          </StoryCard>
-        </div>
-
-        <div className="flow-results">
-          {FLOW_RESULTS.map((item) => (
-            <div className="flow-result" key={item.label}>
-              <div className="flow-result-value">{item.value}</div>
-              <div className="flow-result-label">{item.label}</div>
-            </div>
-          ))}
-        </div>
-
-        <p className="flow-note">
-          You do not prompt it. You connect observability plus GitHub, and the loop runs nightly. You merge, close, or ignore. Memory updates either way.
-        </p>
-      </section>
-
-      <PipelineSection
-        id="how"
-        eyebrow="The six-step pipeline"
-        title="The second screen gets the gist. This section proves the machinery."
-        sub="The sequence is still the same: read the stream, narrow the problem, trace it to code, investigate in a sandbox, then open one quiet PR."
-        steps={PIPELINE_STEPS}
-      />
-
-      <ResultsSection compact />
-      <Pricing />
-      <FAQ />
-      <WaitlistSection />
-    </main>
-  );
-}
-
-function HeroSection({ variant }: { variant: LandingVariant }) {
-  const secondaryAction = HERO_SECONDARY_ACTION[variant];
-
+function HeroSection() {
   return (
     <section className="hero">
       <span className="metabadge">{META_BADGE}</span>
@@ -683,8 +470,8 @@ function HeroSection({ variant }: { variant: LandingVariant }) {
         <a href="#waitlist" className="btn accent">
           Join the waitlist →
         </a>
-        <a href={secondaryAction.href} className="btn ghost">
-          {secondaryAction.label}
+        <a href={HERO_SECONDARY_ACTION.href} className="btn ghost">
+          {HERO_SECONDARY_ACTION.label}
         </a>
       </div>
     </section>
@@ -707,19 +494,6 @@ function LandingStats({ className }: { className?: string }) {
         <div className="st" key={stat.label}>
           <div className="n">{stat.value}</div>
           <div className="l">{stat.label}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function MiniStats({ stats }: { stats: MetricItem[] }) {
-  return (
-    <div className="mini-stats">
-      {stats.map((stat) => (
-        <div className="mini-stat" key={stat.label}>
-          <span className="mini-stat-value">{stat.value}</span>
-          <span className="mini-stat-label">{stat.label}</span>
         </div>
       ))}
     </div>
@@ -822,61 +596,6 @@ function StepIcon({ name }: { name: StepIconName }) {
   }
 }
 
-function CompactIssueCard({ tone = "card" }: { tone?: "card" | "inline" }) {
-  return (
-    <div className={`issue-card${tone === "inline" ? " issue-card-inline" : ""}`}>
-      <div className="issue-card-top">
-        <span className="label">Recurring signature</span>
-        <span className="issue-card-count">132 in 24h</span>
-      </div>
-      <div className="issue-card-title">TypeError: cannot read &#39;sub&#39; of undefined</div>
-      <div className="issue-card-meta">
-        <span>api-gateway</span>
-        <span>17 services touched</span>
-        <span>trace linked</span>
-      </div>
-      <div className="issue-card-body">
-        The system groups repeats, skips known noise, and picks one error worth a tiny PR instead of asking you to stare at another dashboard.
-      </div>
-    </div>
-  );
-}
-
-function SandboxCard() {
-  return (
-    <div className="sandbox-card">
-      <div className="sandbox-head">
-        <span className="label">sandbox run_2041</span>
-        <span>~20m</span>
-      </div>
-      <ul className="sandbox-list">
-        <li>Grouped 41 matching events</li>
-        <li>Traced auth fallback path</li>
-        <li>Reproduced null idempotency key</li>
-        <li>Drafted fix and regression test</li>
-      </ul>
-    </div>
-  );
-}
-
-function MiniPrCard() {
-  return (
-    <div className="mini-pr">
-      <div className="mini-pr-top">
-        <span className="label">PR #4821</span>
-        <span>+8 / -3</span>
-      </div>
-      <div className="mini-pr-title">fix(stripe): guard webhook replay when idempotency_key is null</div>
-      <div className="mini-pr-copy">Small diff. Tests added. Full trace attached. Ready to merge, close, or ignore.</div>
-      <div className="mini-pr-tags">
-        <span className="label">paper-cut</span>
-        <span className="label">auto</span>
-        <span className="label">tests pass</span>
-      </div>
-    </div>
-  );
-}
-
 function ArchitecturePrCard() {
   return (
     <div className="pr">
@@ -911,81 +630,6 @@ function ArchitecturePrCard() {
         <span className="label">✓ lint</span>
         <span>salamonitor · run_2041</span>
       </div>
-    </div>
-  );
-}
-
-function ResultsSection({ compact = false }: { compact?: boolean }) {
-  return (
-    <section className={`results-section${compact ? " results-section-compact" : ""}`}>
-      <div className="pipeline-copy">
-        <div className="eyebrow">What changes after two weeks</div>
-        <h2 className="results-h2">Same backlog. Less noise. A pile of tiny merged fixes.</h2>
-        <p className="pipeline-sub">
-          This keeps the before/after proof from the original page, but in a tighter shape: less spectacle, more evidence.
-        </p>
-      </div>
-
-      <div className="results-grid">
-        <ResultCard badge="Before" title="Your observability dashboard on a Tuesday" items={BEFORE_RESULTS} />
-        <ResultCard badge="After" title="Same system, two weeks later" items={AFTER_RESULTS} success />
-      </div>
-    </section>
-  );
-}
-
-function ResultCard({
-  badge,
-  title,
-  items,
-  success = false,
-}: {
-  badge: string;
-  title: string;
-  items: ResultItem[];
-  success?: boolean;
-}) {
-  return (
-    <div className={`result-card${success ? " is-success" : ""}`}>
-      <div className="result-head">
-        <span className={`ba-tag ${success ? "after" : "before"}`}>{badge}</span>
-        <span className="result-title">{title}</span>
-      </div>
-      <div className="result-list">
-        {items.map((item) => (
-          <div className={`result-row${item.tone === "good" ? " is-good" : ""}`} key={item.title}>
-            <div>
-              <div className="result-row-title">{item.title}</div>
-              <div className="result-row-detail">{item.detail}</div>
-            </div>
-            <div className="result-row-count">{item.count}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function StoryCard({
-  step,
-  title,
-  desc,
-  children,
-}: {
-  step: string;
-  title: string;
-  desc: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="story-card">
-      <div className="story-card-top">
-        <span className="story-step">{step}</span>
-        <span className="label">quiet loop</span>
-      </div>
-      <div className="story-card-title">{title}</div>
-      <p className="story-card-desc">{desc}</p>
-      <div className="story-card-visual">{children}</div>
     </div>
   );
 }
