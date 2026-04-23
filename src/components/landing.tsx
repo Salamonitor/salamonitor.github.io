@@ -568,37 +568,66 @@ function StepIcon({ name }: { name: StepIconName }) {
 
 function ArchitecturePrCard() {
   return (
-    <div className="pr">
+    <div className="pr-card">
       <div className="pr-head">
         <span className="dot r" />
         <span className="dot y" />
         <span className="dot g" />
-        <span className="pr-head-t">github.com / acme / billing-svc · PR #4821</span>
       </div>
       <div className="pr-title">
         <div className="tt">fix(stripe): guard webhook replay when idempotency_key is null</div>
         <div className="meta">
-          salamonitor-bot wants to merge 1 commit · opened 03:41 UTC · +8 / -3 · <span className="label">paper-cut</span>{" "}
-          <span className="label">auto</span>
+          <strong>salamonitor</strong> wants to merge 1 commit · opened 03:41
         </div>
       </div>
       <div className="pr-body">
         <div className="hunk">
-          <span className="ctx">  def handle_webhook(event):</span>
-          <span className="del">-     key = event[&quot;idempotency_key&quot;]</span>
-          <span className="add">+     key = event.get(&quot;idempotency_key&quot;)</span>
-          <span className="add">+     if key is None:</span>
-          <span className="add">+         return SKIP</span>
-          <span className="ctx">      if replay_store.seen(key):</span>
-        </div>
-        <div>
-          Error signature <b>err_8a3e…2b</b> · 41 occurrences / 24h · services: <b>billing-svc</b>
+          <div className="file-head" aria-hidden="true">
+            <span className="file-icon">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4.25 1.75h4.6l2.9 2.9v7.6a1 1 0 0 1-1 1h-6.5a1 1 0 0 1-1-1v-9.5a1 1 0 0 1 1-1Z" />
+                <path d="M8.75 1.75v3h3" />
+              </svg>
+            </span>
+            <span className="file-path">
+              <span className="dir">services/billing/</span>
+              <span className="name">stripe_webhook.py</span>
+            </span>
+          </div>
+          <div className="diff-line ctx">
+            <span className="ln">41</span>
+            <span className="ln">41</span>
+            <span className="code">def handle_webhook(event):</span>
+          </div>
+          <div className="diff-line del">
+            <span className="ln">42</span>
+            <span className="ln" />
+            <span className="code">    key = event[&quot;idempotency_key&quot;]</span>
+          </div>
+          <div className="diff-line add">
+            <span className="ln" />
+            <span className="ln">42</span>
+            <span className="code">    key = event.get(&quot;idempotency_key&quot;)</span>
+          </div>
+          <div className="diff-line add">
+            <span className="ln" />
+            <span className="ln">43</span>
+            <span className="code">    if key is None:</span>
+          </div>
+          <div className="diff-line add">
+            <span className="ln" />
+            <span className="ln">44</span>
+            <span className="code">        return SKIP</span>
+          </div>
+          <div className="diff-line ctx">
+            <span className="ln">45</span>
+            <span className="ln">45</span>
+            <span className="code">    if replay_store.seen(key):</span>
+          </div>
         </div>
       </div>
-      <div className="pr-foot">
-        <span className="label">✓ tests pass</span>
-        <span className="label">✓ lint</span>
-        <span>salamonitor · run_2041</span>
+      <div className="pr-foot" aria-hidden="true">
+        <span className="pr-merge">Merge</span>
       </div>
     </div>
   );
