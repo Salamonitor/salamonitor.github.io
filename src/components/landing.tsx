@@ -19,6 +19,9 @@ type MetricItem = {
   label: string;
 };
 
+type TrendDirection = "up" | "down";
+type ObservabilityChartTone = "accent" | "success";
+
 const META_BADGE = "The manager of your infra";
 
 const HERO_COPY = {
@@ -49,6 +52,9 @@ const LANDING_STATS: MetricItem[] = [
   { value: "~20m", label: "Per investigation, sandboxed" },
   { value: "0", label: "Raw logs retained" },
 ];
+
+const BEFORE_BAR_SERIES = [58, 41, 72, 33, 81, 47, 63, 87, 54, 69, 44, 77];
+const AFTER_BAR_SERIES = [10, 12, 8, 15, 11, 9, 13, 14, 10, 8, 12, 9];
 
 const PIPELINE_STEPS = [
   {
@@ -159,6 +165,65 @@ export default function Landing() {
   );
 }
 
+function TrendValue({ direction, value }: { direction: TrendDirection; value: string }) {
+  return (
+    <span className="delta-copy">
+      <span className="kpi-delta-arrow" aria-hidden="true">
+        {direction === "up" ? "↑" : "↓"}
+      </span>
+      <span>{value}</span>
+    </span>
+  );
+}
+
+function ObservabilityBarChart({ bars, tone }: { bars: number[]; tone: ObservabilityChartTone }) {
+  const chartBase = 88;
+  const chartHeight = 68;
+  const barWidth = 20;
+  const gap = 11;
+  const totalWidth = bars.length * barWidth + (bars.length - 1) * gap;
+  const xOffset = (400 - totalWidth) / 2;
+  const barFill =
+    tone === "accent" ? "var(--theme-color-chart-accent-stroke)" : "var(--theme-color-chart-success-stroke)";
+  const barHalo =
+    tone === "accent" ? "var(--theme-color-chart-accent-fill)" : "var(--theme-color-chart-success-fill)";
+
+  return (
+    <svg viewBox="0 0 400 100" preserveAspectRatio="none" aria-hidden="true">
+      <g stroke="var(--theme-color-gridline)" strokeWidth="1">
+        <line x1="0" y1="25" x2="400" y2="25" />
+        <line x1="0" y1="50" x2="400" y2="50" />
+        <line x1="0" y1="75" x2="400" y2="75" />
+      </g>
+      <g>
+        {bars.map((bar, index) => {
+          const height = Math.max(8, (bar / 100) * chartHeight);
+          const x = xOffset + index * (barWidth + gap);
+          const y = chartBase - height;
+
+          return (
+            <g key={`${tone}-${index}`}>
+              <rect x={x} y={y - 3} width={barWidth} height={height + 3} rx="2" fill={barHalo} />
+              <rect x={x} y={y} width={barWidth} height={height} rx="2" fill={barFill} />
+            </g>
+          );
+        })}
+      </g>
+      <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)">
+        <text x="2" y="98">
+          00:00
+        </text>
+        <text x="180" y="98">
+          12:00
+        </text>
+        <text x="370" y="98">
+          24:00
+        </text>
+      </g>
+    </svg>
+  );
+}
+
 function CurrentLanding() {
   return (
     <main id="top" className="page">
@@ -167,63 +232,25 @@ function CurrentLanding() {
       <section id="proof" className="manifesto">
         <div className="ba-grid">
           <div className="ba-col">
-            <div className="obs">
-              <div className="obs-head">
-                <span className="dot r" />
-                <span className="dot y" />
-                <span className="dot g" />
-                <span className="obs-head-t">errors · production · last 24h</span>
-                <span className="live-dot" />
-                <span className="obs-head-state live">LIVE</span>
-              </div>
+            <div className="obs before">
               <div className="obs-kpis">
-                <div className="kpi">
-                  <div className="kpi-n accent-n">412</div>
+                <div className="kpi alarm-kpi">
+                  <div className="kpi-n danger-n">412</div>
                   <div className="kpi-l">new errors</div>
                 </div>
                 <div className="kpi">
                   <div className="kpi-n">2,847</div>
                   <div className="kpi-l">events / hr</div>
                 </div>
-                <div className="kpi">
-                  <div className="kpi-n">17</div>
-                  <div className="kpi-l">services hit</div>
-                </div>
-                <div className="kpi">
-                  <div className="kpi-n accent-n">↑ 23%</div>
+                <div className="kpi alarm-kpi">
+                  <div className="kpi-n delta-n danger-n">
+                    <TrendValue direction="up" value="23%" />
+                  </div>
                   <div className="kpi-l">vs last week</div>
                 </div>
               </div>
               <div className="obs-bar tall">
-                <svg viewBox="0 0 400 100" preserveAspectRatio="none">
-                  <g stroke="var(--theme-color-gridline)" strokeWidth="1">
-                    <line x1="0" y1="25" x2="400" y2="25" />
-                    <line x1="0" y1="50" x2="400" y2="50" />
-                    <line x1="0" y1="75" x2="400" y2="75" />
-                  </g>
-                  <path
-                    d="M0,22 L18,38 L36,14 L54,48 L72,8 L90,42 L108,12 L126,55 L144,18 L162,40 L180,5 L198,30 L216,20 L234,44 L252,10 L270,36 L288,16 L306,52 L324,22 L342,40 L360,14 L378,32 L400,20 L400,100 L0,100 Z"
-                    fill="var(--theme-color-chart-accent-fill)"
-                    stroke="none"
-                  />
-                  <path
-                    d="M0,22 L18,38 L36,14 L54,48 L72,8 L90,42 L108,12 L126,55 L144,18 L162,40 L180,5 L198,30 L216,20 L234,44 L252,10 L270,36 L288,16 L306,52 L324,22 L342,40 L360,14 L378,32 L400,20"
-                    fill="none"
-                    stroke="var(--theme-color-chart-accent-stroke)"
-                    strokeWidth="1.5"
-                  />
-                  <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)">
-                    <text x="2" y="98">
-                      00:00
-                    </text>
-                    <text x="180" y="98">
-                      12:00
-                    </text>
-                    <text x="370" y="98">
-                      24:00
-                    </text>
-                  </g>
-                </svg>
+                <ObservabilityBarChart bars={BEFORE_BAR_SERIES} tone="accent" />
               </div>
               <div className="obs-rows">
                 <div className="row-e sev-hi">
@@ -302,14 +329,6 @@ function CurrentLanding() {
 
           <div className="ba-col">
             <div className="obs after">
-              <div className="obs-head">
-                <span className="dot r" />
-                <span className="dot y" />
-                <span className="dot g" />
-                <span className="obs-head-t">errors · production · last 24h</span>
-                <span className="live-dot ok" />
-                <span className="obs-head-state ok">HEALTHY</span>
-              </div>
               <div className="obs-kpis">
                 <div className="kpi">
                   <div className="kpi-n ok-n">3</div>
@@ -320,44 +339,14 @@ function CurrentLanding() {
                   <div className="kpi-l">events / hr</div>
                 </div>
                 <div className="kpi">
-                  <div className="kpi-n ok-n">409</div>
-                  <div className="kpi-l">PRs merged</div>
-                </div>
-                <div className="kpi">
-                  <div className="kpi-n ok-n">↓ 95%</div>
+                  <div className="kpi-n ok-n delta-n">
+                    <TrendValue direction="down" value="95%" />
+                  </div>
                   <div className="kpi-l">vs before</div>
                 </div>
               </div>
               <div className="obs-bar tall">
-                <svg viewBox="0 0 400 100" preserveAspectRatio="none">
-                  <g stroke="var(--theme-color-gridline)" strokeWidth="1">
-                    <line x1="0" y1="25" x2="400" y2="25" />
-                    <line x1="0" y1="50" x2="400" y2="50" />
-                    <line x1="0" y1="75" x2="400" y2="75" />
-                  </g>
-                  <path
-                    d="M0,85 L50,89 L100,83 L150,91 L200,86 L250,90 L300,84 L350,88 L400,86 L400,100 L0,100 Z"
-                    fill="var(--theme-color-chart-success-fill)"
-                    stroke="none"
-                  />
-                  <path
-                    d="M0,85 L50,89 L100,83 L150,91 L200,86 L250,90 L300,84 L350,88 L400,86"
-                    fill="none"
-                    stroke="var(--theme-color-chart-success-stroke)"
-                    strokeWidth="1.5"
-                  />
-                  <g fontFamily="var(--mono)" fontSize="8" fill="var(--muted)">
-                    <text x="2" y="98">
-                      00:00
-                    </text>
-                    <text x="180" y="98">
-                      12:00
-                    </text>
-                    <text x="370" y="98">
-                      24:00
-                    </text>
-                  </g>
-                </svg>
+                <ObservabilityBarChart bars={AFTER_BAR_SERIES} tone="success" />
               </div>
               <div className="obs-rows">
                 <div className="row-e sev-md">
