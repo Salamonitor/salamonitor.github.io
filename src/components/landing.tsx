@@ -1,7 +1,7 @@
 import AnimatedLandingStats from "@/components/animated-landing-stats";
 import { PLAN_FEATURES, TIER_LABELS, TIER_ORDER, TIER_PRICES, type TierKey } from "@/lib/pricing";
 
-type StepIconName = "scan" | "filter" | "trace" | "investigate" | "pr" | "learn";
+type StepIconName = "scan" | "trace" | "investigate" | "pr";
 
 type StepItem = {
   num: string;
@@ -29,7 +29,7 @@ const META_BADGE = "The manager of your infra";
 
 const HERO_COPY = {
   h1: "We ship the PRs <em>you</em> keep snoozing.",
-  sub: "Salamonitor runs a 6-step pipeline over your observability platform - groups recurring errors, investigates each in a sandbox, and lands a tiny, boring GitHub PR with full context.",
+  sub: "Salamonitor runs a 4-step pipeline over your observability platform - traces production errors to code, investigates each in a sandbox, and lands a tiny, boring GitHub PR with full context.",
 };
 
 const HERO_SECONDARY_ACTION = {
@@ -51,7 +51,7 @@ const FEATURED_TIER: TierKey = "growth";
 
 const LANDING_STATS: MetricItem[] = [
   { value: 412, label: "Errors in a median backlog" },
-  { value: 6, label: "Pipeline steps, nightly" },
+  { value: 4, label: "Pipeline steps, nightly" },
   { value: 20, label: "Per investigation, sandboxed", prefix: "~", suffix: "m" },
   { value: 0, label: "Raw logs retained" },
 ];
@@ -68,33 +68,21 @@ const PIPELINE_STEPS = [
   },
   {
     num: "02",
-    title: "Cuts through the noise",
-    desc: "Groups repeats, skips the known, surfaces what actually matters.",
-    icon: "filter",
-  },
-  {
-    num: "03",
     title: "Finds the source",
     desc: "Traces each error back through your services to the exact line of code.",
     icon: "trace",
   },
   {
-    num: "04",
+    num: "03",
     title: "Investigates like an engineer",
     desc: "Reasons about root cause in a sandbox. One error at a time.",
     icon: "investigate",
   },
   {
-    num: "05",
+    num: "04",
     title: "Ships the fix",
     desc: "Opens a clean, reviewable pull request with tests and full context.",
     icon: "pr",
-  },
-  {
-    num: "06",
-    title: "Gets smarter",
-    desc: "Learns from every merge, close, and comment. Tomorrow's PRs are better.",
-    icon: "learn",
   },
 ] satisfies StepItem[];
 
@@ -443,8 +431,8 @@ function CurrentLanding() {
       <PipelineSection
         id="how"
         eyebrow="What it actually does"
-        title="Six quiet steps from error backlog to pull request."
-        sub="The product flow is simple on purpose: watch the stream, narrow the problem, trace it to code, investigate in a sandbox, then open one clean PR."
+        title="Four quiet steps from error backlog to pull request."
+        sub="The product flow is simple on purpose: watch the stream, trace it to code, investigate in a sandbox, then open one clean PR."
         steps={PIPELINE_STEPS}
       />
 
@@ -494,6 +482,11 @@ type PipelineSectionProps = {
 };
 
 function PipelineSection({ eyebrow, title, sub, steps, id }: PipelineSectionProps) {
+  const flowItems = steps.flatMap((step, index) => [
+    <StepCard key={step.num} step={step} />,
+    ...(index < steps.length - 1 ? [<PipelineArrow key={`${step.num}-arrow`} />] : []),
+  ]);
+
   return (
     <section id={id} className="pipeline-section">
       <div className="pipeline-copy">
@@ -502,11 +495,7 @@ function PipelineSection({ eyebrow, title, sub, steps, id }: PipelineSectionProp
         <p className="pipeline-sub">{sub}</p>
       </div>
 
-      <div className="pipeline">
-        {steps.map((step) => (
-          <StepCard key={step.num} step={step} />
-        ))}
-      </div>
+      <div className="pipeline">{flowItems}</div>
     </section>
   );
 }
@@ -526,6 +515,17 @@ function StepCard({ step }: { step: StepItem }) {
   );
 }
 
+function PipelineArrow() {
+  return (
+    <div className="pipeline-arrow" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 12h14" />
+        <path d="m13 7 5 5-5 5" />
+      </svg>
+    </div>
+  );
+}
+
 function StepIcon({ name }: { name: StepIconName }) {
   switch (name) {
     case "scan":
@@ -534,13 +534,6 @@ function StepIcon({ name }: { name: StepIconName }) {
           <path d="M3.5 12c1.8-3.8 4.9-5.7 8.5-5.7s6.7 1.9 8.5 5.7c-1.8 3.8-4.9 5.7-8.5 5.7S5.3 15.8 3.5 12Z" />
           <circle cx="12" cy="12" r="2.6" />
           <path d="M12 3.5v1.8M4.8 6.1l1.3 1.3M19.2 6.1l-1.3 1.3" />
-        </svg>
-      );
-    case "filter":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M4 6.5h16l-6.4 7.1v4.6l-3.2-1.8v-2.8L4 6.5Z" />
-          <path d="M9 6.5 7.4 4.9M15 6.5l1.6-1.6" />
         </svg>
       );
     case "trace":
@@ -568,14 +561,6 @@ function StepIcon({ name }: { name: StepIconName }) {
           <circle cx="17" cy="18.5" r="2.2" />
           <circle cx="17" cy="7.5" r="2.2" />
           <path d="M7 7.7v9.6c0 .7.6 1.2 1.2 1.2h6.6M15.4 7.5H9.2c-.7 0-1.2.5-1.2 1.2v1.8" />
-        </svg>
-      );
-    case "learn":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 4.5a7.5 7.5 0 1 1-6.2 3.3" />
-          <path d="M4.6 5v4.8h4.8" />
-          <path d="M12 8.5v3.4l2.6 1.6" />
         </svg>
       );
   }
