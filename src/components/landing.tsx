@@ -1,3 +1,5 @@
+import { PLAN_FEATURES, TIER_LABELS, TIER_ORDER, TIER_PRICES, type TierKey } from "@/lib/pricing";
+
 type StepIconName = "scan" | "filter" | "trace" | "investigate" | "pr" | "learn";
 
 type StepItem = {
@@ -28,6 +30,18 @@ const HERO_SECONDARY_ACTION = {
   href: "#architecture",
   label: "Read the architecture",
 };
+
+const PRIMARY_CTA = {
+  href: "#get-started",
+  label: "Get started",
+};
+
+const CONTACT_CTA = {
+  href: "mailto:hello@salamonitor.dev?subject=Get%20started%20with%20Salamonitor",
+  label: "Email us to get started",
+};
+
+const FEATURED_TIER: TierKey = "growth";
 
 const LANDING_STATS: MetricItem[] = [
   { value: "412", label: "Errors in a median backlog" },
@@ -125,8 +139,8 @@ export default function Landing() {
           <a href="#proof">Proof</a>
         </nav>
         <div className="right">
-          <a className="btn" href="#waitlist">
-            Join waitlist
+          <a className="btn" href={PRIMARY_CTA.href}>
+            {PRIMARY_CTA.label}
           </a>
         </div>
       </header>
@@ -456,7 +470,7 @@ function CurrentLanding() {
 
       <Pricing />
       <FAQ />
-      <WaitlistSection />
+      <GetStartedSection />
     </main>
   );
 }
@@ -467,8 +481,8 @@ function HeroSection() {
       <h1 dangerouslySetInnerHTML={{ __html: HERO_COPY.h1 }} />
       <p className="hero-sub">{HERO_COPY.sub}</p>
       <div className="ctas">
-        <a href="#waitlist" className="btn accent">
-          Join the waitlist →
+        <a href={PRIMARY_CTA.href} className="btn accent">
+          {PRIMARY_CTA.label} →
         </a>
         <a href={HERO_SECONDARY_ACTION.href} className="btn ghost">
           {HERO_SECONDARY_ACTION.label}
@@ -638,49 +652,30 @@ function Pricing() {
   return (
     <section id="pricing">
       <div className="eyebrow">Pricing</div>
-      <h2>Three lines. No seat tax.</h2>
+      <h2>Three plans. No seat tax.</h2>
       <div className="pricing">
-        <div className="tier">
-          <div className="tname">Starter</div>
-          <div className="price">
-            $0<small> · 30 days</small>
-          </div>
-          <ul>
-            <li>1 repo, 20 PRs</li>
-            <li>Observability + GitHub</li>
-            <li>Slack notifications</li>
-          </ul>
-          <a className="btn ghost" href="#waitlist">
-            Start free
-          </a>
-        </div>
-        <div className="tier hi">
-          <div className="ribbon">Most teams</div>
-          <div className="tname">Team</div>
-          <div className="price">
-            $499<small> /mo + $20 per merged PR</small>
-          </div>
-          <ul>
-            <li>10 repos</li>
-            <li>Vault-backed secrets</li>
-            <li>Long-term memory of outcomes</li>
-          </ul>
-          <a className="btn accent" href="#waitlist">
-            Join waitlist
-          </a>
-        </div>
-        <div className="tier">
-          <div className="tname">Platform</div>
-          <div className="price">Talk</div>
-          <ul>
-            <li>Unlimited repos</li>
-            <li>Dedicated Temporal ns</li>
-            <li>SSO · audit export · SLA</li>
-          </ul>
-          <a className="btn ghost" href="#waitlist">
-            Talk to us
-          </a>
-        </div>
+        {TIER_ORDER.map((tier) => {
+          const plan = PLAN_FEATURES[tier];
+          const isFeatured = tier === FEATURED_TIER;
+          const isEnterprise = tier === "enterprise";
+
+          return (
+            <div key={tier} className={`tier${isFeatured ? " hi" : ""}`}>
+              {isFeatured && <div className="ribbon">Recommended</div>}
+              <div className="tname">{TIER_LABELS[tier]}</div>
+              <div className="price">{TIER_PRICES[tier]}</div>
+              {plan.includes && <p className="includes">{plan.includes}</p>}
+              <ul>
+                {plan.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+              <a className={`btn${isFeatured ? " accent" : " ghost"}`} href={isEnterprise ? CONTACT_CTA.href : PRIMARY_CTA.href}>
+                {isEnterprise ? "Contact sales" : PRIMARY_CTA.label}
+              </a>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -691,25 +686,27 @@ function FAQ() {
     <section id="faq" className="faq">
       <div className="eyebrow">Frequently asked</div>
       <h2>The honest answers.</h2>
-      <div className="faq-list">
+      <ul className="faq-list">
         {FAQ_ITEMS.map((item) => (
-          <details key={item.q}>
-            <summary>{item.q}</summary>
-            <div className="a">{item.a}</div>
-          </details>
+          <li key={item.q} className="faq-item">
+            <details>
+              <summary>{item.q}</summary>
+              <p className="a">{item.a}</p>
+            </details>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
 
-function WaitlistSection() {
+function GetStartedSection() {
   return (
-    <section id="waitlist">
-      <h2>It&#39;s ready. Is your backlog?</h2>
+    <section id="get-started">
+      <h2>It&#39;s ready. Time to get started.</h2>
       <div className="ctas">
-        <a className="btn accent" href="#top">
-          Join the waitlist →
+        <a className="btn accent" href={CONTACT_CTA.href}>
+          {CONTACT_CTA.label} →
         </a>
         <a className="btn ghost" href="#top">
           Read the docs
