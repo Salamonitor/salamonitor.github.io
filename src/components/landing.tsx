@@ -167,10 +167,6 @@ function CurrentLanding() {
       <section id="proof" className="manifesto">
         <div className="ba-grid">
           <div className="ba-col">
-            <div className="ba-cap">
-              <span className="ba-tag before">Before</span>
-              <span className="ba-cap-t">your observability platform on a Tuesday</span>
-            </div>
             <div className="obs">
               <div className="obs-head">
                 <span className="dot r" />
@@ -305,10 +301,6 @@ function CurrentLanding() {
           </div>
 
           <div className="ba-col">
-            <div className="ba-cap">
-              <span className="ba-tag after">After</span>
-              <span className="ba-cap-t">same dashboard, two weeks later</span>
-            </div>
             <div className="obs after">
               <div className="obs-head">
                 <span className="dot r" />
