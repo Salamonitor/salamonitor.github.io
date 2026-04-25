@@ -1,6 +1,7 @@
 import AnimatedLandingStats from "@/components/animated-landing-stats";
 import CurrentYear from "@/components/current-year";
 import { PLAN_FEATURES, TIER_LABELS, TIER_ORDER, TIER_PRICES, type TierKey } from "@/lib/pricing";
+import Image from "next/image";
 
 type StepIconName = "scan" | "trace" | "investigate" | "pr";
 
@@ -135,7 +136,14 @@ export default function Landing() {
     <>
       <header className="topnav">
         <a href="#top" className="brand" aria-label="Salamonitor - home">
-          <span className="mark">S</span>
+          <Image
+            className="brand-logo"
+            src="/salamonitor-logo-dark.png"
+            alt=""
+            width={256}
+            height={256}
+            loading="eager"
+          />
           <span className="brand-word">Salamonitor</span>
         </a>
         <div className="right">

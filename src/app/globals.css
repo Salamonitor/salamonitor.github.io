@@ -150,20 +150,11 @@ body::before {
 .brand-word {
   line-height: 1;
 }
-.brand .mark {
+.brand-logo {
   width: clamp(1.9rem, 1.78rem + 0.36vw, 2.2rem);
   height: clamp(1.9rem, 1.78rem + 0.36vw, 2.2rem);
-  border: 1px solid color-mix(in srgb, var(--theme-color-border-strong) 72%, transparent);
-  border-radius: 0.8rem;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.14)),
-    var(--theme-gradient-brand);
-  color: var(--theme-color-accent-contrast);
-  display: grid; place-items: center;
-  font-family: var(--mono);
-  font-size: clamp(0.6875rem, 0.66rem + 0.12vw, 0.8125rem);
-  font-weight: 700;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  display: block;
+  object-fit: contain;
   flex: none;
 }
 
@@ -1357,7 +1348,7 @@ footer {
   }
   .kpi:nth-child(even) { border-left: 1px solid var(--theme-color-border-strong); }
   .kpi:nth-child(n + 3) { border-top: 1px solid var(--theme-color-border-strong); }
-  .brand .mark { width: 1.65rem; height: 1.65rem; font-size: 0.6875rem; }
+  .brand-logo { width: 1.65rem; height: 1.65rem; }
   .brand-word { display: none; }
   footer { padding: 28px 16px; gap: 12px; }
   .row-e .svc { display: none; }
