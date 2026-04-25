@@ -5,6 +5,7 @@
   --edge: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   --nav-pad: clamp(0.75rem, 0.62rem + 0.35vw, 1rem);
   --nav-pad-scrolled: clamp(0.5625rem, 0.48rem + 0.2vw, 0.75rem);
+  --button-radius: 999px;
 }
 
 body[data-theme] {
@@ -175,17 +176,17 @@ body::before {
   font-size: clamp(0.9375rem, 0.9rem + 0.16vw, 1rem);
   font-weight: 600;
   color: var(--theme-color-accent-contrast);
-  background: var(--ink);
-  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  border-radius: 999px;
+  background: var(--accent);
+  border: 1px solid var(--theme-color-accent-strong);
+  border-radius: var(--button-radius);
   box-shadow: none;
   white-space: nowrap;
   transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
 }
 .topnav .right .btn:hover {
   transform: none;
-  background: color-mix(in srgb, var(--ink) 92%, white);
-  border-color: color-mix(in srgb, var(--ink) 18%, transparent);
+  background: var(--theme-color-accent-strong);
+  border-color: var(--theme-color-accent-strong);
   box-shadow: none;
 }
 .topnav .right .btn:focus-visible {
@@ -261,7 +262,7 @@ p {
   line-height: 1.2;
   padding: clamp(8px, 0.6vw, 14px) clamp(14px, 1.1vw, 24px);
   background: transparent; color: var(--ink);
-  border: 1.5px solid var(--theme-color-border-strong); border-radius: 4px;
+  border: 1.5px solid var(--theme-color-border-strong); border-radius: var(--button-radius);
   cursor: pointer; text-decoration: none; position: relative;
   box-shadow: 3px 3px 0 var(--theme-color-border-strong);
   transition: transform 80ms ease, box-shadow 80ms ease, background 120ms ease;
@@ -1053,7 +1054,7 @@ p {
   width: 100%;
   min-height: 2.75rem;
   justify-content: center;
-  border-radius: 0.625rem;
+  border-radius: var(--button-radius);
   padding: 0.75rem 1rem;
   font-size: 0.95rem;
   box-shadow: none;
