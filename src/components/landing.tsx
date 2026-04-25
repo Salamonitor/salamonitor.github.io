@@ -30,7 +30,7 @@ const META_BADGE = "The manager of your infra";
 
 const HERO_COPY = {
   h1: "We ship the PRs <em>you</em> keep snoozing.",
-  sub: "Salamonitor runs a 4-step pipeline over your observability platform - traces production errors to code, investigates each in a sandbox, and lands a tiny, boring GitHub PR with full context.",
+  sub: "Salamonitor connects to your observability stack, scans your most frequent errors, and ships PRs to fix them.",
 };
 
 const HERO_SECONDARY_ACTION = {
@@ -397,7 +397,7 @@ function CurrentLanding() {
         <ManifestoHeading />
 
         <p className="ba-body">
-          Salamonitor does. Every night it reads your observability platform, groups errors by signature, spins up a sandboxed agent per group, and opens a PR with the fix, the trace, and the blast radius. You merge, close, or ignore.
+          The same errors clutter your observability stack for months. Salamonitor cleans them up so you can focus on what matters.
         </p>
 
         <LandingStats className="ba-stats" />

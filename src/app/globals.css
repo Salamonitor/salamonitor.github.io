@@ -392,8 +392,9 @@ p {
   letter-spacing: -0.03em;
 }
 .ba-body {
-  max-width: clamp(34rem, 64vw, 74rem);
+  max-width: clamp(30rem, 54vw, 50rem);
   margin: clamp(1.5rem, 1rem + 1vw, 3rem) auto 0;
+  text-align: center;
   font-family: var(--hand);
   color: var(--ink);
   line-height: 1.55;
