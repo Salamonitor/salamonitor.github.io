@@ -2,11 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 
+type TrendDirection = "up" | "down";
+type MetricTone = "good" | "bad";
+
 type MetricItem = {
   value: number;
   label: string;
   prefix?: string;
   suffix?: string;
+  direction?: TrendDirection;
+  tone?: MetricTone;
 };
 
 type AnimatedLandingStatsProps = {
@@ -14,7 +19,7 @@ type AnimatedLandingStatsProps = {
   stats: MetricItem[];
 };
 
-const ANIMATION_DURATION_MS = 900;
+const ANIMATION_DURATION_MS = 1300;
 
 export default function AnimatedLandingStats({ className, stats }: AnimatedLandingStatsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,7 +88,10 @@ export default function AnimatedLandingStats({ className, stats }: AnimatedLandi
     <div ref={containerRef} className={`stats${className ? ` ${className}` : ""}`}>
       {stats.map((stat) => (
         <div className="st" key={stat.label}>
-          <div className="n">{formatMetricValue(stat, progress)}</div>
+          <div className={`n${stat.tone ? ` ${stat.tone}` : ""}`}>
+            {stat.direction ? <span className="trend-arrow" aria-hidden="true">{stat.direction === "up" ? "↑" : "↓"}</span> : null}
+            <span>{formatMetricValue(stat, progress)}</span>
+          </div>
           <div className="l">{stat.label}</div>
         </div>
       ))}

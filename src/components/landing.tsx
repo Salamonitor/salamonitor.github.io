@@ -21,6 +21,8 @@ type MetricItem = {
   label: string;
   prefix?: string;
   suffix?: string;
+  direction?: TrendDirection;
+  tone?: "good" | "bad";
 };
 
 type TrendDirection = "up" | "down";
@@ -50,12 +52,18 @@ const CONTACT_CTA = {
 
 const FEATURED_TIER: TierKey = "growth";
 
-const LANDING_STATS: MetricItem[] = [
-  { value: 412, label: "Errors in a median backlog" },
-  { value: 4, label: "Pipeline steps, nightly" },
-  { value: 20, label: "Per investigation, sandboxed", prefix: "~", suffix: "m" },
-  { value: 0, label: "Raw logs retained" },
+const LANDING_STATS_BEFORE: MetricItem[] = [
+  { value: 39, label: "say investigation takes most time", suffix: "%", direction: "up", tone: "bad" },
+  { value: 13, label: "to ship a fix", suffix: "h", direction: "up", tone: "bad" },
 ];
+
+const LANDING_STATS_AFTER: MetricItem[] = [
+  { value: 75, label: "time reclaimed / month*", prefix: "~", suffix: "h", direction: "down", tone: "good" },
+  { value: 5, label: "eng cost reclaimed / month*", prefix: "~$", suffix: "k", direction: "down", tone: "good" },
+];
+
+const LANDING_STATS_NOTE =
+  "*Assumes a 10-engineer team, a 10% reduction in the 17.3 hours per week developers spend on bad code, debugging, refactoring, and modifying, and the U.S. median software developer wage.";
 
 const BEFORE_BAR_SERIES = [58, 41, 72, 33, 81, 47, 63, 87, 54, 69, 44, 77];
 const AFTER_BAR_SERIES = [10, 12, 8, 15, 11, 9, 13, 14, 10, 8, 12, 9];
@@ -212,6 +220,10 @@ function CurrentLanding() {
       <section id="proof" className="manifesto">
         <div className="ba-grid">
           <div className="ba-col">
+            <div className="ba-stats-group-label ba-card-label bad">
+              <span aria-hidden="true">↑</span>
+              <span>Without</span>
+            </div>
             <div className="obs before">
               <div className="obs-kpis">
                 <div className="kpi alarm-kpi">
@@ -307,6 +319,10 @@ function CurrentLanding() {
           </div>
 
           <div className="ba-col">
+            <div className="ba-stats-group-label ba-card-label good">
+              <span aria-hidden="true">↓</span>
+              <span>With</span>
+            </div>
             <div className="obs after">
               <div className="obs-kpis">
                 <div className="kpi">
@@ -394,7 +410,8 @@ function CurrentLanding() {
           The same errors clutter your observability stack for months. Salamonitor cleans them up so you can focus on what matters.
         </p>
 
-        <LandingStats className="ba-stats" />
+        <LandingStats />
+        <p className="ba-stats-note">{LANDING_STATS_NOTE}</p>
       </section>
 
       <section id="architecture">
@@ -461,8 +478,25 @@ function ManifestoHeading() {
   );
 }
 
-function LandingStats({ className }: { className?: string }) {
-  return <AnimatedLandingStats className={className} stats={LANDING_STATS} />;
+function LandingStats() {
+  return (
+    <div className="ba-stats">
+      <div className="ba-stats-group">
+        <div className="ba-stats-group-label bad">
+          <span aria-hidden="true">↑</span>
+          <span>Without Salamonitor</span>
+        </div>
+        <AnimatedLandingStats className="ba-stats-grid" stats={LANDING_STATS_BEFORE} />
+      </div>
+      <div className="ba-stats-group">
+        <div className="ba-stats-group-label good">
+          <span aria-hidden="true">↓</span>
+          <span>With Salamonitor</span>
+        </div>
+        <AnimatedLandingStats className="ba-stats-grid" stats={LANDING_STATS_AFTER} />
+      </div>
+    </div>
+  );
 }
 
 type PipelineSectionProps = {
