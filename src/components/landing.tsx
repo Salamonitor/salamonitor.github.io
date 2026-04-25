@@ -130,12 +130,6 @@ export default function Landing() {
           <span className="mark">S</span>
           <span className="brand-word">Salamonitor</span>
         </a>
-        <nav aria-label="Primary">
-          <a href="#how">How it works</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#faq">FAQ</a>
-          <a href="#proof">Proof</a>
-        </nav>
         <div className="right">
           <a className="btn" href={PRIMARY_CTA.href}>
             {PRIMARY_CTA.label}
