@@ -1138,6 +1138,21 @@ p {
   padding-right: clamp(20px, 4vw, 56px);
 }
 
+.get-started {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(1rem, 0.7rem + 1vw, 1.75rem);
+}
+
+.get-started h2 {
+  margin: 0;
+}
+
+.get-started .ctas {
+  width: 100%;
+}
+
 /* ============================================================
  * Footer
  * ============================================================ */

@@ -709,14 +709,14 @@ function FAQ() {
 
 function GetStartedSection() {
   return (
-    <section id="get-started">
-      <h2>It&#39;s ready. Time to get started.</h2>
+    <section id="get-started" className="get-started">
+      <h2>Ready to make production quieter?</h2>
       <div className="ctas">
         <a className="btn accent" href={CONTACT_CTA.href}>
-          {CONTACT_CTA.label} →
+          {PRIMARY_CTA.label} →
         </a>
-        <a className="btn ghost" href="#top">
-          Read the docs
+        <a className="btn ghost" href={HERO_SECONDARY_ACTION.href}>
+          {HERO_SECONDARY_ACTION.label}
         </a>
       </div>
     </section>
