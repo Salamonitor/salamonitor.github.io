@@ -423,13 +423,10 @@ function CurrentLanding() {
               Salamonitor turns a recurring error signature into a tiny, context-rich pull request: the fix, the trace, the affected services, the tests. Merge it, close it, or ignore it - we learn either way.
             </p>
             <ul className="arch-list">
-              <li>▪ Small, scoped diffs. One recurring error per PR.</li>
-              <li>▪ Context: error signature, 24h occurrence count, affected services, trace link.</li>
-              <li>▪ Tests added. Lint clean before it&#39;s opened.</li>
-              <li>
-                ▪ Labeled <span className="label">paper-cut</span> <span className="label">auto</span>. Easy to filter out.
-              </li>
-              <li>▪ You merge, close, or ignore. Memory updates either way.</li>
+              <li>▪ One recurring prod error. One small PR.</li>
+              <li>▪ Evidence attached: signature, 24h count, services, trace.</li>
+              <li>▪ Regression test added. Lint/CI green before review.</li>
+              <li>▪ You merge, close, or ignore. Salamonitor learns either way.</li>
             </ul>
           </div>
 
