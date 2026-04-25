@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Salamonitor — The manager of your infra",
+  title: "Salamonitor — Your autonomous infra manager",
   description:
     "Salamonitor reads your observability platform, finds recurring errors nobody owns, and files a tiny, reviewable PR. Merge it, don't, or close it — we learn either way.",
 };

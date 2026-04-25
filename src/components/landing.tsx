@@ -26,7 +26,7 @@ type MetricItem = {
 type TrendDirection = "up" | "down";
 type ObservabilityChartTone = "accent" | "success";
 
-const META_BADGE = "The manager of your infra";
+const META_BADGE = "Your autonomous infra manager";
 
 const HERO_COPY = {
   h1: "We ship the PRs <em>you</em> keep snoozing.",
