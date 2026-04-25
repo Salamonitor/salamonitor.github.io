@@ -1292,25 +1292,14 @@ footer {
 }
 
 @media (max-width: 880px) {
-  .pipeline { grid-template-columns: repeat(2, 1fr); }
   .pricing { grid-template-columns: 1fr; }
-  .ba-stats { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 760px) {
   .ba-grid { grid-template-columns: 1fr; gap: 24px; max-width: 600px; }
   .ba-stats-group-label { justify-content: center; }
   .stats.ba-stats-grid { grid-template-columns: 1fr; }
-  .ba-arrow {
-    --ba-arrow-span: 4.2rem;
-    flex-direction: row;
-    gap: 8px;
-    padding: 4px 0;
-  }
-  .ba-arrow-mark {
-    transform: rotate(90deg);
-    transform-origin: center;
-  }
+  .ba-arrow { display: none; }
 }
 
 @media (max-width: 640px) {
@@ -1321,6 +1310,28 @@ footer {
     padding: 0.55rem 0.85rem;
   }
   .hero { padding-top: 2rem; }
+  .pipeline {
+    grid-template-columns: minmax(0, min(100%, 20rem));
+    row-gap: 0.875rem;
+  }
+  .step {
+    min-height: auto;
+    padding: 14px;
+  }
+  .get-started {
+    margin-top: 2rem;
+    padding-top: 5rem;
+  }
+  .get-started .ctas {
+    max-width: 22rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .get-started .btn {
+    width: 100%;
+    min-height: 3.25rem;
+    justify-content: center;
+  }
   .row-e { padding: 8px 10px; }
   .tier { padding: 18px; }
   .tier .ribbon { font-size: 12px; }
@@ -1329,6 +1340,15 @@ footer {
 }
 
 @media (max-width: 480px) {
+  .ba-stats {
+    gap: 10px;
+  }
+  .ba-stats-group-label {
+    width: 100%;
+    padding-inline: 0.45rem;
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+  }
   .obs-kpis { grid-template-columns: repeat(2, 1fr); }
   .kpi {
     min-height: 0;
