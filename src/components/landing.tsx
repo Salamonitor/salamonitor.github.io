@@ -1,4 +1,5 @@
 import AnimatedLandingStats from "@/components/animated-landing-stats";
+import CurrentYear from "@/components/current-year";
 import { PLAN_FEATURES, TIER_LABELS, TIER_ORDER, TIER_PRICES, type TierKey } from "@/lib/pricing";
 
 type StepIconName = "scan" | "trace" | "investigate" | "pr";
@@ -33,8 +34,8 @@ const HERO_COPY = {
 };
 
 const HERO_SECONDARY_ACTION = {
-  href: "#architecture",
-  label: "Read the architecture",
+  href: "mailto:hello@salamonitor.dev?subject=Get%20started%20with%20Salamonitor",
+  label: "Contact us",
 };
 
 const PRIMARY_CTA = {
@@ -145,12 +146,9 @@ export default function Landing() {
       <CurrentLanding />
 
       <footer>
-        <div className="grow">Salamonitor · the manager of your infra · est. 2026</div>
-        <div>docs</div>
-        <div>changelog</div>
-        <div>security</div>
-        <div>privacy</div>
-        <div>hello@salamonitor.dev</div>
+        <div>
+          &copy; <CurrentYear /> Salamonitor
+        </div>
       </footer>
     </>
   );
